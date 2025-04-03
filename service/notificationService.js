@@ -1,6 +1,6 @@
 const EmailService = require("./EmailService");
 const SmsService = require("./SmsService");
-const PushService = require("./PushNotificationService");
+const PushService = require("./PushService");
 
 class NotificationService {
   static getNotificationService(type) {

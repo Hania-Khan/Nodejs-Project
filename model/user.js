@@ -14,21 +14,22 @@ const userSchema = new mongoose.Schema(
       unique: true,
       trim: true,
       lowercase: true,
-      index: true, 
+      index: true,
     },
     password: {
       type: String,
       required: true,
     },
     roles: {
-      type: [String], 
-      enum: ["email", "sms", "push"], 
+      type: [String],
+      enum: ["email-sender", "sms-sender", "push-sender"],
       required: true,
     },
   },
-  { timestamps: true } 
+  { timestamps: true }
 );
 
+// Hash the password only when it's created or modified
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);

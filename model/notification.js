@@ -16,7 +16,12 @@ const notificationSchema = new mongoose.Schema(
       {
         email: {
           type: String,
-          required: true,
+        },
+        deviceToken: {
+          type: String,
+          required: function () {
+            return this.type === "push"; // Only required if it's a push notification
+          },
         },
       },
     ],
@@ -47,7 +52,7 @@ const notificationSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["Sent", "Failed", "Pending"],
-      default: "Pending",
+      default: "Sent",
       required: true,
       index: true,
     },
