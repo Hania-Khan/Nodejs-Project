@@ -1,0 +1,64 @@
+# Node.js dependencies
+/node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build and distribution files
+/dist
+/build
+/public
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+
+# Coverage
+/coverage
+
+# Dependency directories
+bower_components
+
+# IDE or text editor specific
+.vscode/
+.idea/
+
+# Testing
+/coverage/
+
+# TypeScript build files
+*.tsbuildinfo
+
+# NPM package lock files (if using yarn, uncomment the next line)
+/yarn.lock
+
+# macOS specific files
+.DS_Store
+
+# Linux-specific files
+*.pid
+
+# JetBrains IDE files
+.idea/
+
+# Visual Studio Code workspace settings
+.vscode/
+
+# npm logs
+npm-debug.log*
+
+# AWS credentials
+.aws/
