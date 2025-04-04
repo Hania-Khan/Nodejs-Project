@@ -105,6 +105,21 @@ class UserService {
     await user.save();
     return user;
   }
+
+
+ // Get User by ID
+ static async getUserById(userId) {
+  const user = await User.findById(userId);
+  return user;
+}
+
+// Delete User by ID
+static async deleteUserById(userId) {
+  const user = await User.findByIdAndDelete(userId);
+  return user;
+}
+
+
 }
 
 module.exports = UserService;

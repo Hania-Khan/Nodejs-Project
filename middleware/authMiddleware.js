@@ -61,25 +61,18 @@ exports.validateNotificationRequest = (req, res, next) => {
       then: Joi.required(),
       otherwise: Joi.optional(),
     }),
-    recipient: Joi.alternatives().conditional("type", {
-      is: "push",
-      then: Joi.alternatives()
-        .try(
-          Joi.string(),
-          Joi.array().items(
-            Joi.object({ deviceToken: Joi.string().required() })
-          )
-        )
-        .required(),
-      otherwise: Joi.alternatives()
-        .try(
-          Joi.string().email(),
-          Joi.string().pattern(/^[^@]+$/),
-          Joi.array().items(Joi.string().email())
-        )
-        .required(),
-    }),
+    recipients: Joi.array()
+      .items(
+        Joi.object({
+          email: Joi.string().email(),
+          phoneNumber: Joi.string().pattern(/^[0-9]+$/),
+          deviceToken: Joi.string(),
+        })
+      )
+      .min(1)
+      .required(),
     content: Joi.string().required(),
+    status: Joi.string().required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -88,5 +81,5 @@ exports.validateNotificationRequest = (req, res, next) => {
     return res.status(400).json({ message: error.message });
   }
 
-  next(); // ✅ Ensure the next middleware is called
+  next();
 };

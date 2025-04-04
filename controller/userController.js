@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const UserService = require("../service/userService");
 
+//Create USer--POST request 
 exports.createUser = async (req, res) => {
   try {
     const { name, emailaddress, password, roles } = req.body;
@@ -55,7 +56,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-
+//Replace User--PUT request
 exports.replaceUser = async (req, res) => {
   try {
     const { name, emailaddress, password, roles } = req.body;
@@ -86,6 +87,7 @@ exports.replaceUser = async (req, res) => {
   }
 };
 
+// Update User--PATCH request
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.user.id; // Get user ID from authentication middleware
@@ -116,6 +118,79 @@ exports.updateUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating user:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//GET REQUEST -- get user details 
+exports.getUser = async (req, res) => {
+  try {
+    const userId = req.user.id;  // Get the userId from the authenticated user (from the JWT payload)
+    
+    const user = await UserService.getUserById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User retrieved successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        emailaddress: user.emailaddress,
+        roles: user.roles,
+      },
+    });
+  } catch (error) {
+    console.error("Error retrieving user:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get User by ID
+exports.getUserById = async (req, res) => {
+  try {
+    const { userId } = req.params;  // Get the userId from the route parameter
+
+    const user = await UserService.getUserById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User retrieved successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        emailaddress: user.emailaddress,
+        roles: user.roles,
+      },
+    });
+  } catch (error) {
+    console.error("Error getting user:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+// Delete User by ID
+exports.deleteUserById = async (req, res) => {
+  try {
+    const { userId } = req.params;  // Get the userId from the route parameter
+
+    const user = await UserService.deleteUserById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting user:", error);
     res.status(500).json({ message: error.message });
   }
 };

@@ -16,27 +16,24 @@ const notificationSchema = new mongoose.Schema(
       {
         email: {
           type: String,
+          required: function () {
+            return this.type === "email";
+          },
         },
         deviceToken: {
           type: String,
           required: function () {
-            return this.type === "push"; // Only required if it's a push notification
+            return this.type === "push";
+          },
+        },
+        phoneNumber: {
+          type: String,
+          required: function () {
+            return this.type === "sms";
           },
         },
       },
     ],
-    phoneNumber: {
-      type: String,
-      required: function () {
-        return this.type === "sms";
-      },
-    },
-    emailaddress: {
-      type: String,
-      required: function () {
-        return this.type === "email";
-      },
-    },
     subject: {
       type: String,
       required: function () {
