@@ -3,6 +3,7 @@ const Joi = require("joi");
 
 exports.authenticate = (req, res, next) => {
   try {
+    //Extract the token from the Authorization header
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
@@ -11,6 +12,7 @@ exports.authenticate = (req, res, next) => {
         .json({ message: "Unauthorized: No token provided" });
     }
 
+    //Verify the token using the secret key
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
@@ -21,6 +23,7 @@ exports.authenticate = (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
       }
 
+      //Attach the decoded user information to the request object
       req.user = decoded;
       next();
     });
@@ -33,6 +36,7 @@ exports.authenticate = (req, res, next) => {
 exports.roleMiddleware = (allowedRoles) => (req, res, next) => {
   try {
     const userRoles = req.user.roles;
+    //Check if any allowed role matches the user's roles
     const hasAccess = allowedRoles.some((role) => userRoles.includes(role));
 
     if (!hasAccess) {

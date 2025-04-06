@@ -1,25 +1,40 @@
 const jwt = require("jsonwebtoken");
 const UserService = require("../service/userService");
 
-//Create USer--POST request 
+//Create User--POST request
 exports.createUser = async (req, res) => {
   try {
+    //Destructure the request body
+    // Check if the required fields are present
     const { name, emailaddress, password, roles } = req.body;
-
-    if (!name || !emailaddress || !password || !roles || !Array.isArray(roles)) {
+    //Basic validation for required fields
+    if (
+      !name ||
+      !emailaddress ||
+      !password ||
+      !roles ||
+      !Array.isArray(roles)
+    ) {
       return res.status(400).json({
         message: "Name, email, password, and roles are required",
       });
     }
+    // Create the user using the UserService
+    const user = await UserService.createUser(
+      name,
+      emailaddress,
+      password,
+      roles
+    );
 
-    const user = await UserService.createUser(name, emailaddress, password, roles);
-
+    // Generate JWT token
     const token = jwt.sign(
       { id: user._id, emailaddress: user.emailaddress, roles: user.roles },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-
+    //sUCCESSFUL RESPONSE
+    // Send the response with user details and token
     res.status(201).json({
       message: "User created successfully",
       user: {
@@ -41,10 +56,12 @@ exports.loginUser = async (req, res) => {
     const { emailaddress, password } = req.body;
 
     if (!emailaddress || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
-    const { token, user } = await UserService.loginUser(emailaddress, password);
+    const { token } = await UserService.loginUser(emailaddress, password);
 
     res.status(200).json({
       message: "Login successful",
@@ -62,9 +79,14 @@ exports.replaceUser = async (req, res) => {
     const { name, emailaddress, password, roles } = req.body;
     const userId = req.user.id;
 
-    const user = await UserService.updateUser(userId, { name, emailaddress, password, roles });
+    const user = await UserService.updateUser(userId, {
+      name,
+      emailaddress,
+      password,
+      roles,
+    });
 
-    // Generate a new token with updated roles
+    // Generate a new token with updated 
     const newToken = jwt.sign(
       { id: user._id, emailaddress: user.emailaddress, roles: user.roles },
       process.env.JWT_SECRET,
@@ -122,13 +144,13 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-//GET REQUEST -- get user details 
+//GET REQUEST -- get user details
 exports.getUser = async (req, res) => {
   try {
-    const userId = req.user.id;  // Get the userId from the authenticated user (from the JWT payload)
-    
+    const userId = req.user.id; // Get the userId from the authenticated user (from the JWT payload)
+
     const user = await UserService.getUserById(userId);
-    
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -151,10 +173,10 @@ exports.getUser = async (req, res) => {
 // Get User by ID
 exports.getUserById = async (req, res) => {
   try {
-    const { userId } = req.params;  // Get the userId from the route parameter
+    const { userId } = req.params; // Get the userId from the route parameter
 
     const user = await UserService.getUserById(userId);
-    
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -174,14 +196,13 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-
 // Delete User by ID
 exports.deleteUserById = async (req, res) => {
   try {
-    const { userId } = req.params;  // Get the userId from the route parameter
+    const { userId } = req.params; // Get the userId from the route parameter
 
     const user = await UserService.deleteUserById(userId);
-    
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -194,4 +215,3 @@ exports.deleteUserById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-

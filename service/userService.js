@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 class UserService {
   // User Registration
   static async createUser(name, emailaddress, password, roles) {
+    
+    //Check for existing user (case-insensitive)
     const existingUser = await User.findOne({
       emailaddress: { $regex: new RegExp(`^${emailaddress}$`, "i") },
     });
@@ -12,7 +14,8 @@ class UserService {
     if (existingUser) {
       throw new Error("User with this email already exists");
     }
-
+ 
+    //Create and save new user
     const user = new User({ name, emailaddress, password, roles });
     await user.save();
     return user;
