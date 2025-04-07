@@ -1,6 +1,5 @@
 const Notification = require("../model/notification");
 const NotificationService = require("../service/notificationService");
-const { validateNotificationRequest } = require("../middleware/authMiddleware");
 
 exports.createNotification = async (req, res) => {
   try {
