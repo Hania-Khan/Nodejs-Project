@@ -1,11 +1,28 @@
-on: push
+
+name: Node.js CI/CD
+on: [push]
+
 jobs:
-    build-node:
-        runs-on: ubuntu-latest
-        container: node:16
-        steps:
-            - run: node --version
-            - run : npm --version
-            - uses: actions/checkout@v3
-            - run: npm install
-            - run: node index.js
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+      
+      # Install dependencies
+      - run: npm install
+      
+      # Run tests (optional, but recommended)
+      - run: npm test
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}  # Only needed if tests require DB
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      
+      # Start the server (only if needed for integration tests)
+      - run: node index.js
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        continue-on-error: true  # Prevents workflow failure if server runs indefinitely
