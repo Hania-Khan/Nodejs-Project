@@ -41,7 +41,7 @@ services:
       - "8080:8080"
     volumes:
       - //./pipe/docker_engine://./pipe/docker_engine
-      - /c/Users/HP/.docker:/root/.docker
+      - C:/Users/HP/.docker:/root/.docker
       - jenkins_home:/var/jenkins_home
       #- /var/run/docker.sock:/var/run/docker.sock  # ← Docker access
       #- /usr/bin/docker:/usr/bin/docker  # ← Docker CLI
