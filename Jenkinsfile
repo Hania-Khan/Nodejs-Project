@@ -1,11 +1,14 @@
 pipeline {
-  agent {
-       docker { image 'node:16-alpine' }
-}
+    agent {
+        docker {
+            image 'node:16-alpine'
+        }
+    }
     stages {
-        stage ('Test') {
+        stage('Info') {
             steps {
-                sh 'node --version'
+                echo 'Basic Jenkins pipeline setup complete!'
+                sh 'ls -al'
             }
         }
     }
