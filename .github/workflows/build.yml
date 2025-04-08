@@ -1,62 +1,38 @@
-name: Node.js CI/CD with MongoDB
-on: [push]
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
-    services:
-      mongo:
-        image: mongo:6.0  # Using specific version instead of latest
-        env:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: example
-          MONGO_INITDB_DATABASE: test  # Initialize a default database
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "mongosh --eval 'db.serverStatus()'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
-          --memory 512M  # Limit memory to prevent OOM issues
-          --restart unless-stopped
 
     steps:
-      - uses: actions/checkout@v4
-      
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 16
-          cache: 'npm'
+    # Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - run: npm ci
+    # Set up Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
 
-      - name: Wait for MongoDB to be ready
-        timeout-minutes: 5  # Give MongoDB ample time to start
-        run: |
-          echo "Waiting for MongoDB to start..."
-          for i in {1..30}; do
-            if docker exec mongo mongosh --eval "db.runCommand({ping:1})" > /dev/null 2>&1; then
-              echo "MongoDB is ready!"
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "MongoDB failed to start within 150 seconds"
-          docker logs $(docker ps -qf "name=mongo")
-          exit 1
+    # Install dependencies
+    - name: Install dependencies
+      run: npm install
 
-      - name: Run tests
-        run: npm test
-        env:
-          MONGO_URI: mongodb://root:example@localhost:27017/test?authSource=admin
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+    # Run tests (if you have any tests set up)
+    - name: Run tests
+      run: npm test
 
-      - name: Start application
-        run: |
-          npm start &
-          sleep 15
-        env:
-          MONGO_URI: mongodb://root:example@localhost:27017/test?authSource=admin
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          PORT: 4001
+    # Build the app (if needed)
+    - name: Build the app
+      run: npm run build
+
+    # Optionally, you can deploy or do additional tasks here
