@@ -1,29 +1,11 @@
 pipeline {
-    agent any
-    stages {
-        stage('Checkout') {
+    agent{
+       docker { image 'node:16-alpine'}
+}
+    stage {
+        stage ('Test'){
             steps {
-                git 'https://github.com/Hania-Khan/Nodejs-Project.git'
-            }
-        }
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'npm test'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh 'npm run build'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'echo "Deploying..."'
+                sh 'node --version'
             }
         }
     }
