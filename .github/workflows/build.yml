@@ -25,10 +25,17 @@ jobs:
       # Install dependencies
       - run: npm install
 
+      # Wait for MongoDB to be ready
+      - run: |
+          echo "Waiting for MongoDB to start..."
+          until nc -zv localhost 27017; do
+            sleep 1
+          done
+          echo "MongoDB is ready!"
+
       # Build and run the app (connects to MongoDB via Docker)
       - run: |
-          echo "Connecting to MongoDB at mongodb://user:user123@localhost:27017/"
-          npm start  # Or your start script for the app, ensure this runs the app
+          npm start  # Start the app without the echo statement
         env:
           MONGO_URI: mongodb://user:user123@localhost:27017/
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
