@@ -34,8 +34,17 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: user123  
       ME_CONFIG_MONGODB_URL: mongodb://user:user123@mongo:27017/  
       ME_CONFIG_BASICAUTH: false  # Disables basic authentication
-
+  jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+  ssh-agent:
+    image: jenkins/ssh-agent
 volumes:  
   mongo_data:  
+  jenkins_home:
+
     
   
