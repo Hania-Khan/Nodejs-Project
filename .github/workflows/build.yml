@@ -1,38 +1,42 @@
-name: Node.js CI
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+name: Node.js CI/CD with MongoDB
+on: [push]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:latest  # Use the official MongoDB Docker image
+        env:
+          MONGO_INITDB_ROOT_USERNAME: user
+          MONGO_INITDB_ROOT_PASSWORD: user123
+        ports:
+          - 27017:27017  # Expose MongoDB port
 
     steps:
-    # Checkout the code
-    - name: Checkout code
-      uses: actions/checkout@v2
+      # Checkout code
+      - uses: actions/checkout@v4
+      
+      # Set up Node.js environment
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
 
-    # Set up Node.js
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
+      # Install dependencies
+      - run: npm install
 
-    # Install dependencies
-    - name: Install dependencies
-      run: npm install
+      # Wait for MongoDB to be ready
+      - run: |
+          echo "Waiting for MongoDB to start..."
+          until nc -zv localhost 27017; do
+            sleep 1
+          done
+          echo "MongoDB is ready!"
 
-    # Run tests (if you have any tests set up)
-    - name: Run tests
-      run: npm test
-
-    # Build the app (if needed)
-    - name: Build the app
-      run: npm run build
-
-    # Optionally, you can deploy or do additional tasks here
+      # Build and run the app (connects to MongoDB via Docker)
+      - run: |
+          npm start  # Start the app without the echo statement
+        env:
+          MONGO_URI: mongodb://user:user123@localhost:27017/
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PORT: 4001  # Port your app is using
