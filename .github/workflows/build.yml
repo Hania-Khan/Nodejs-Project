@@ -6,12 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mongo:
-        image: mongo:latest  # Use the official MongoDB Docker image
+        image: mongo:latest
         env:
           MONGO_INITDB_ROOT_USERNAME: user
           MONGO_INITDB_ROOT_PASSWORD: user123
         ports:
-          - 27017:27017  # Expose MongoDB port
+          - 27017:27017
+        options: --health-cmd "mongosh --eval 'db.serverStatus()'" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       # Checkout code
@@ -21,22 +22,50 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 16
+          cache: 'npm'
 
       # Install dependencies
-      - run: npm install
+      - run: npm ci  # Using ci for cleaner installs in CI environments
 
       # Wait for MongoDB to be ready
-      - run: |
+      - name: Wait for MongoDB
+        run: |
           echo "Waiting for MongoDB to start..."
-          until nc -zv localhost 27017; do
-            sleep 1
+          for i in {1..30}; do
+            if nc -z localhost 27017; then
+              echo "MongoDB is ready!"
+              exit 0
+            fi
+            sleep 2
           done
-          echo "MongoDB is ready!"
+          echo "MongoDB failed to start within 60 seconds"
+          exit 1
 
-      # Build and run the app (connects to MongoDB via Docker)
-      - run: |
-          npm start  # Start the app without the echo statement
+      # Run tests (assuming you have test scripts)
+      - name: Run tests
+        run: npm test
+        env:
+          MONGO_URI: mongodb://user:user123@localhost:27017/test
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      # Start the app in background for integration tests if needed
+      - name: Start application
+        run: |
+          nohup npm start > app.log 2>&1 &
+          echo $! > app.pid
+          sleep 10  # Give the app some time to start
+          cat app.log
         env:
           MONGO_URI: mongodb://user:user123@localhost:27017/
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          PORT: 4001  # Port your app is using
+          PORT: 4001
+
+      # Add any additional test steps here if needed
+
+      # Clean up
+      - name: Stop application
+        if: always()
+        run: |
+          if [ -f app.pid ]; then
+            kill $(cat app.pid) || true
+          fi
