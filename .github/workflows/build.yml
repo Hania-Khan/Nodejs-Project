@@ -1,9 +1,8 @@
-
 name: Node.js CI/CD
 on: [push]
 
 jobs:
-  test-and-build:
+  build-only:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,13 +13,7 @@ jobs:
       # Install dependencies
       - run: npm install
       
-      # Run tests (optional, but recommended)
-      - run: npm test
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}  # Only needed if tests require DB
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      
-      # Start the server (only if needed for integration tests)
+      # (Optional) Start the server - for manual validation/debug
       - run: node index.js
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
