@@ -35,19 +35,19 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://user:user123@mongo:27017/  
       ME_CONFIG_BASICAUTH: false  # Disables basic authentication
   jenkins:
-    image: jenkins/jenkins:lts
-    privileged: true  # ← Required for Docker-in-Docker
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    container_name: jenkins-docker
     ports:
       - "8080:8080"
+    privileged: true
     volumes:
-      - //./pipe/docker_engine://./pipe/docker_engine
+      - //./pipe/docker_engine://./pipe/docker_engine  # For Windows named pipe
       - C:/Users/HP/.docker:/root/.docker
       - jenkins_home:/var/jenkins_home
-      #- /var/run/docker.sock:/var/run/docker.sock  # ← Docker access
-      #- /usr/bin/docker:/usr/bin/docker  # ← Docker CLI
-      #- /usr/local/bin/docker-compose:/usr/local/bin/docker-compose  # ← Compose CLI
-    networks:
-      - default  # ← Must be on same network as other services
+    environment:
+      - DOCKER_HOST=npipe:////./pipe/docker_engine  # Required for Windows
   ssh-agent:
     image: jenkins/ssh-agent
 
