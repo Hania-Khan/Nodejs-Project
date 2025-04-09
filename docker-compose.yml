@@ -45,14 +45,11 @@ services:
     privileged: true
     volumes:
       - type: bind
-        source: "//./pipe/docker_engine"
-        target: "//./pipe/docker_engine"
-      - type: bind
-        source: "C:/Users/HP/.docker"
-        target: "/root/.docker"
+        source: //var/run/docker.sock
+        target: /var/run/docker.sock
       - jenkins_home:/var/jenkins_home
     environment:
-      - DOCKER_HOST=npipe:////./pipe/docker_engine
+      DOCKER_HOST: unix:///var/run/docker.sock
 
   ssh-agent:
     image: jenkins/ssh-agent
