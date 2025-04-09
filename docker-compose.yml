@@ -1,39 +1,40 @@
-version: "3.8"  
+version: "3.8"
 
-services: 
-  app: 
-    build: .  
-    image: node-app-image-1  
+services:
+  app:
+    build: .
+    image: node-app-image-1
     ports:
-      - "4002:4001"  # Maps host port 4002 to container port 4001 (format: HOST:CONTAINER)
+      - "4002:4001"
     volumes:
-      - ./:/app  # Mounts current directory to /app in container (for code synchronization)
-      - /app/node_modules  # Creates anonymous volume for node_modules (to prevent overwriting)
-    environment:  
-      MONGO_URI: mongodb://user:user123@mongo:27017/ 
-      APP_PORT: 4001  
+      - ./:/app
+      - /app/node_modules
+    environment:
+      MONGO_URI: mongodb://user:user123@mongo:27017/
+      APP_PORT: 4001
     depends_on:
-      - mongo  # Ensures mongo service starts before this service
+      - mongo
 
-  mongo:  
-    image: mongo  
-    restart: always  
-    environment:  
-      MONGO_INITDB_ROOT_USERNAME: user  
-      MONGO_INITDB_ROOT_PASSWORD: user123 
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: user123
     volumes:
-      - mongo_data:/data/db  # Persists data to a named volume
-  
-  mongo-express:  
-    image: mongo-express  
-    restart: always 
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
     ports:
-      - "8081:8081"  
-    environment:  
-      ME_CONFIG_MONGODB_ADMINUSERNAME: user  
-      ME_CONFIG_MONGODB_ADMINPASSWORD: user123  
-      ME_CONFIG_MONGODB_URL: mongodb://user:user123@mongo:27017/  
-      ME_CONFIG_BASICAUTH: "false " # Disables basic authentication
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: user123
+      ME_CONFIG_MONGODB_URL: mongodb://user:user123@mongo:27017/
+      ME_CONFIG_BASICAUTH: "false"
+
   jenkins:
     build:
       context: .
@@ -43,14 +44,19 @@ services:
       - "8080:8080"
     privileged: true
     volumes:
-      - //./pipe/docker_engine://./pipe/docker_engine  # For Windows named pipe
-      - C:/Users/HP/.docker:/root/.docker
+      - type: bind
+        source: "//./pipe/docker_engine"
+        target: "//./pipe/docker_engine"
+      - type: bind
+        source: "C:/Users/HP/.docker"
+        target: "/root/.docker"
       - jenkins_home:/var/jenkins_home
     environment:
-      - DOCKER_HOST=npipe:////./pipe/docker_engine  # Required for Windows
+      - DOCKER_HOST=npipe:////./pipe/docker_engine
+
   ssh-agent:
     image: jenkins/ssh-agent
 
-volumes:  
-  mongo_data:  
+volumes:
+  mongo_data:
   jenkins_home:
