@@ -45,10 +45,12 @@ services:
     privileged: true
     user: root  # Run as root to avoid permission issues
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock  # Mount the socket directly
+      - type: bind
+        source: //var/run/docker.sock
+        target: /var/run/docker.sock
       - jenkins_home:/var/jenkins_home
     environment:
-      DOCKER_HOST: unix:///var/run/docker.sock  # Force Docker CLI to use Unix socket
+      DOCKER_HOST: unix:///var/run/docker.sock
 
   ssh-agent:
     image: jenkins/ssh-agent
