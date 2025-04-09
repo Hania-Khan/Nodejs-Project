@@ -44,12 +44,10 @@ services:
       - "8080:8080"
     privileged: true
     volumes:
-      - type: bind
-        source: //var/run/docker.sock
-        target: /var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
       - jenkins_home:/var/jenkins_home
     environment:
-      DOCKER_HOST: unix:///var/run/docker.sock
+      DOCKER_HOST: "tcp://host.docker.internal:2375"
 
   ssh-agent:
     image: jenkins/ssh-agent
