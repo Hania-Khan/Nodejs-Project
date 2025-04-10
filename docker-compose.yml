@@ -14,3 +14,9 @@ services:
       APP_PORT: 4001
     depends_on:
       - mongo
+    networks:
+      - shared-network  # Use the shared network
+
+networks:
+  shared-network:
+    external: true  # Ensure the network is defined externally

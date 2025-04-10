@@ -10,7 +10,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: user123
     volumes:
       - mongo_data:/data/db
-
+    networks:
+      - shared-network  # Attach MongoDB to the shared networ
+      
   mongo-express:
     image: mongo-express
     restart: always
@@ -21,6 +23,11 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: user123
       ME_CONFIG_MONGODB_URL: mongodb://user:user123@mongo:27017/
       ME_CONFIG_BASICAUTH: "false"
-
+    networks:
+      - shared-network  # Attach MongoDB Express to the shared network
 volumes:
   mongo_data:
+
+networks:
+  shared-network:
+    external: true  # Use an external network that is defined externally

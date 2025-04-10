@@ -11,13 +11,21 @@ services:
     user: root
     privileged: true
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_home:/var/jenkins_home
     environment:
       DOCKER_HOST: unix:///var/run/docker.sock
+    networks:
+      - shared-network  # Connect Jenkins to the shared network
 
   ssh-agent:
     image: jenkins/ssh-agent
+    networks:
+      - shared-network  # Connect ssh-agent to the shared network
 
 volumes:
   jenkins_home:
+
+networks:
+  shared-network:
+    external: true  # Use the shared external network
