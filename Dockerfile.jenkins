@@ -16,7 +16,9 @@ RUN apt-get update && \
     | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     apt-get update && \
     apt-get install -y docker-ce-cli docker-compose && \
-    groupadd docker && usermod -aG docker jenkins
+    groupadd docker && \
+    usermod -aG docker jenkins && \
+    newgrp docker
 
 # Switch back to Jenkins user
 USER jenkins
