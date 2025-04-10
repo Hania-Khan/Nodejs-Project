@@ -12,8 +12,8 @@ services:
     environment:
       MONGO_URI: mongodb://user:user123@mongo:27017/
       APP_PORT: 4001
-    depends_on:
-      - mongo
+    #depends_on:
+    #  - mongodb:mongo
     networks:
       - shared-network  # Use the shared network
 
