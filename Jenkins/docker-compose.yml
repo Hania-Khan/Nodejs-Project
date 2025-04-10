@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    container_name: jenkins-docker
+    ports:
+      - "8080:8080"
+    user: root
+    privileged: true
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - jenkins_home:/var/jenkins_home
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+
+  ssh-agent:
+    image: jenkins/ssh-agent
+
+volumes:
+  jenkins_home:
