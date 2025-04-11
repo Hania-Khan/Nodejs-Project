@@ -12,6 +12,7 @@ services:
     environment:
       MONGO_URI: mongodb://user:user123@mongo:27017/
       APP_PORT: 4001
+      JWT_SECRET: 3f@9!kL2$zX8^pQwR&7*YtN0oV!mJd
     #depends_on:
     #  - mongodb:mongo
     networks:
