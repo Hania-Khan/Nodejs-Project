@@ -1,17 +1,43 @@
+version: '3.8'
+
 services:
   broker:
     image: apache/kafka:latest
     container_name: broker
+    networks:
+      - shared-network
+    ports:
+      - "9092:9092"  # Exposing Kafka on localhost:9092 for the outside world
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://localhost:9092,CONTROLLER://localhost:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_NUM_PARTITIONS: 3
+      KAFKA_MESSAGE_MAX_BYTES: 209715200  # 200MB (increase if needed)
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 209715200  # Same for replica fetch
+      KAFKA_FETCH_MAX_BYTES: 209715200  # Same for fetching
+      KAFKA_MAX_REQUEST_SIZE: 209715200  # Max request size (default is 100MB)
+
+  kafka-ui:
+    container_name: kafka-ui
+    networks:
+      - shared-network
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8090:8080
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    volumes:
+      - C:/Users/HP/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+
+networks:
+  shared-network:
+    external: true
