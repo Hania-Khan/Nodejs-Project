@@ -2,13 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
+const { Kafka } = require("kafkajs");
 require("dotenv").config();
 
 const notificationRoutes = require("./route/notificationRoutes");
 const userRoutes = require("./route/userRoutes");
 
-const produceMessage = require("./Kafka/producer/producer");
-const startConsumer = require("./Kafka/consumer/consumer");
+const runProducer = require("./Kafka/producer");
+const runConsumer = require("./Kafka/consumer");
 
 const app = express();
 
@@ -48,23 +49,17 @@ app.use((err, req, res, next) => {
 
 // Start the server
 const PORT = process.env.APP_PORT || 4000;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
-
-// Test Kafka Producer Route
-app.post("/api/v1/kafka/send", async (req, res) => {
-  try {
-    const { message } = req.body;
-    await produceMessage({ message });
-    res.status(200).json({ success: true, message: "Message sent to Kafka" });
-  } catch (err) {
-    console.error("Kafka Producer Error:", err);
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  startConsumer(); // ✅ Start consuming after server boots
 });
+
+const startKafka = async () => {
+  try {
+    await runProducer();
+    await runConsumer();
+  } catch (err) {
+    console.error("Error starting Kafka services:", err);
+  }
+};
+
+startKafka();
