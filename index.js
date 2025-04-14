@@ -8,8 +8,8 @@ require("dotenv").config();
 const notificationRoutes = require("./route/notificationRoutes");
 const userRoutes = require("./route/userRoutes");
 
-const runProducer = require("./Kafka/producer");
-const runConsumer = require("./Kafka/consumer");
+const { runProducer } = require("./Kafka/producer");
+const { runConsumer } = require("./Kafka/consumer");
 
 const app = express();
 
