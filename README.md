@@ -119,3 +119,29 @@ This model stores details of users who can send notifications, along with their 
 #### Indexing
 
 - `emailaddress`
+
+## 🚀 API Routes
+
+### 📩 Notification Routes
+
+| Method | Endpoint                     | Description                            |
+| ------ | ---------------------------- | -------------------------------------- |
+| POST   | `/api/v1/notifications/send` | Create and send a new notification     |
+| GET    | `/api/v1/notifications`      | Retrieve all notifications             |
+| GET    | `/api/v1/notifications/:id`  | Retrieve a specific notification by ID |
+| PUT    | `/api/v1/notifications/:id`  | Update notification details by ID      |
+| DELETE | `/api/v1/notifications/:id`  | Delete a specific notification by ID   |
+
+---
+
+### 👤 User Routes
+
+| Method | Endpoint                         | Description                                  |
+| ------ | -------------------------------- | -------------------------------------------- |
+| POST   | `/api/v1/users`                  | Create a new user                            |
+| POST   | `/api/v1/users/login`            | User login                                   |
+| GET    | `/api/v1/users/profile`          | Retrieve details of all users                |
+| GET    | `/api/v1/users/profile/:userId`  | Retrieve details of a specific user by ID    |
+| PATCH  | `/api/v1/users/update`           | Update specific user fields or roles         |
+| PUT    | `/api/v1/users/profile/:replace` | Replace an entire user profile with new data |
+| DELETE | `/api/v1/users/delete/:userId`   | Delete a specific user by ID                 |
