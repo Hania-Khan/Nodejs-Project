@@ -1,3 +1,35 @@
+## 🚀 Project Setup Guide
+
+Follow the steps below to set up and run the project locally:
+
+---
+
+### 1. Clone the Repository
+
+```bash
+git clone <your-repository-url>
+cd <your-project-directory>
+
+### 2. Create .env File
+MONGO_URI=mongodb://<mongo-host>:27017/<database-name>
+APP_PORT=4001
+JWT_SECRET=your_jwt_secret
+KAFKA_TOPIC=Test_Topic
+KAFKA_BROKER=broker:9092
+
+### 3. Build Docker Image for Node App
+docker build -t node-app-image-1 .
+
+### 4. Run Required Containers
+Mongo
+Mongo-Express
+Kafka-UI
+Kafka-broker
+Jenkins-docker
+Jenkins-ssh-agent
+Node-App
+
+
 ---
 ##  Docker Setup
 
