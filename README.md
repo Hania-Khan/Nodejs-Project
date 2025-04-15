@@ -9,8 +9,10 @@ Follow the steps below to set up and run the project locally:
 ```bash
 git clone <your-repository-url>
 cd <your-project-directory>
+```
 
 ### 2. Create .env File
+
 MONGO_URI=mongodb://<mongo-host>:27017/<database-name>
 APP_PORT=4001
 JWT_SECRET=your_jwt_secret
@@ -18,9 +20,11 @@ KAFKA_TOPIC=Test_Topic
 KAFKA_BROKER=broker:9092
 
 ### 3. Build Docker Image for Node App
+
 docker build -t node-app-image-1 .
 
 ### 4. Run Required Containers
+
 Mongo
 Mongo-Express
 Kafka-UI
@@ -29,12 +33,11 @@ Jenkins-docker
 Jenkins-ssh-agent
 Node-App
 
-
 ---
-##  Docker Setup
 
-All services are configured to run in a `shared-network` so they can communicate seamlessly.
----
+## Docker Setup
+
+## All services are configured to run in a `shared-network` so they can communicate seamlessly.
 
 ### 🔹 MongoDB
 
