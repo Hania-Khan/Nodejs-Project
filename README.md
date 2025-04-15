@@ -35,6 +35,29 @@ Node-App
 
 ---
 
+## 🧾 Code Structure
+
+The project follows a modular folder structure to ensure maintainability and scalability:
+
+project-root │
+├── 📁 controller/ → Handles incoming requests and sends responses.
+│
+├── 📁 service/ → Contains business logic and reusable integrations (e.g., Email, Push).
+│
+├── 📁 route/ → Defines all Express.js routes.
+│
+├── 📁 model/ → Mongoose models for MongoDB schema definitions.
+│
+├── 📁 middleware/ → Custom middleware for authentication, error handling, etc.
+│
+├── 📁 Kafka/ → Kafka setup, producers, consumers, and related configs.
+│
+├── 📁 MongoDB/ → Configuration for running MongoDB container (e.g., docker-compose or Dockerfile).
+│
+├── 📁 Jenkins/ → Jenkins pipeline setup and container configuration.
+
+---
+
 ## Docker Setup
 
 ## All services are configured to run in a `shared-network` so they can communicate seamlessly.
