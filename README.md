@@ -1,10 +1,7 @@
-
 ---
-
 ##  Docker Setup
 
 All services are configured to run in a `shared-network` so they can communicate seamlessly.
-
 ---
 
 ### 🔹 MongoDB
@@ -59,3 +56,21 @@ All services are configured to run in a `shared-network` so they can communicate
 - **Image Build**:
   ```bash
   docker build -t node-app-image-1 .
+  ```
+
+## Environment Variable
+
+Set the following environment variables
+
+---
+
+### 🔹 .env File
+
+MONGO_URI=
+
+- `APP_PORT=4001`
+- `JWT_SECRET=`
+- `KAFKA_TOPIC=Test_Topic`
+- `KAFKA_BROKER=broker:9092`
+
+---
