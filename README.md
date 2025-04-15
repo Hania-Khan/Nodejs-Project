@@ -1,8 +1,22 @@
-## Project Setup Guide
+# 📬 Notification Service System
 
-Follow the steps below to set up and run the project locally:
+A robust and scalable microservice built using Node.js, Express, Kafka, and MongoDB to manage and deliver various types of notifications (Email, SMS, Push) with secure user management using JWT Authentication.
 
 ---
+
+## 🛠️ Pre-requisites
+
+Before running the project, make sure you have the following installed on your machine:
+
+- [Node.js](https://nodejs.org/) (v14 or higher recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+- [MongoDB](https://www.mongodb.com/) & [MySQL](https://www.mysql.com/)
+
+---
+
+## 📦 Project Setup Guide
+
+Follow the steps below to set up and run the project locally:
 
 ### 1. Clone the Repository
 
@@ -11,7 +25,14 @@ git clone <your-repository-url>
 cd <your-project-directory>
 ```
 
-### 2. Create .env File
+### 2. Run the App
+
+| Command       | Description                                     |
+| ------------- | ----------------------------------------------- |
+| `npm start`   | Run the app in production mode                  |
+| `npm run dev` | Run the app in development mode using `nodemon` |
+
+### 3. Create .env File
 
 - MONGO_URI=mongodb://<mongo-host>:27017/<database-name>
 - APP_PORT=4001
@@ -19,38 +40,40 @@ cd <your-project-directory>
 - KAFKA_TOPIC=Test_Topic
 - KAFKA_BROKER=broker:9092
 
-### 3. Build Docker Image for Node App
+### 4. Build Docker Image for Node App
 
 docker build -t node-app-image-1 .
 
-### 4. Containers Required
+### 5. Containers Required
 
-Mongo
-Mongo-Express
-Kafka-UI
-Kafka-broker
-Jenkins-docker
-Jenkins-ssh-agent
-Node-App
-
----
-
-## Code Structure
-
-- controller/ → Handles incoming requests and sends responses.
-- service/ → Contains business logic and reusable integrations (e.g., Email, Push).
-- route/ → Defines all Express.js routes.
-- model/ → Mongoose models for MongoDB schema definitions.
-- middleware/ → Custom middleware for authentication, error handling, etc.
-- Kafka/ → Kafka setup, producers, consumers, and related configs.
-- MongoDB/ → Configuration for running MongoDB container (e.g., docker-compose or Dockerfile).
-- Jenkins/ → Jenkins pipeline setup and container configuration.
+- Mongo
+- Mongo-Express
+- Kafka-UI
+- Kafka-broker
+- Jenkins-docker
+- Jenkins-ssh-agent
+- Node-App
 
 ---
 
-## Docker Setup
+## 📁 Project Structure
 
-## All services are configured to run in a `shared-network` so they can communicate seamlessly.
+| Name          | Description                                                                       |
+| ------------- | --------------------------------------------------------------------------------- |
+| `Jenkins/`    | Jenkins pipeline setup and container configuration.                               |
+| `Kafka/`      | Kafka setup, including producers, consumers, and related configurations.          |
+| `MongoDB/`    | Configuration for running MongoDB container (e.g., `docker-compose`, Dockerfile). |
+| `controller/` | Handles incoming HTTP requests and sends appropriate responses.                   |
+| `middleware/` | Custom middleware functions for authentication, error handling, etc.              |
+| `model/`      | Mongoose models for MongoDB schema definitions.                                   |
+| `route/`      | Defines all API endpoints and Express.js routing logic.                           |
+| `service/`    | Contains core business logic and reusable integrations (e.g., Email, Push).       |
+
+---
+
+## 🐳 Docker Setup
+
+All services are configured to run in a `shared-network` so they can communicate seamlessly.
 
 ### MongoDB
 
@@ -62,8 +85,6 @@ Node-App
 - **Mongo Express**:
   - Port: `8081:8081`
   - Add credentials and `MONGO_URI` as env variables
-
----
 
 ### Kafka
 
@@ -84,8 +105,6 @@ Node-App
       - `broker path & port`
     - Mount `config.yaml` as volume
 
----
-
 ### Jenkins
 
 - **Images**:
@@ -97,8 +116,6 @@ Node-App
 - **Ports**:
   - Jenkins: `8080:8080`
 
----
-
 ### Node App
 
 - **Image Build**:
@@ -106,7 +123,9 @@ Node-App
   docker build -t node-app-image-1 .
   ```
 
-## Environment Variable
+---
+
+## 🔐 Environment Variable
 
 Set the following environment variables
 
@@ -120,7 +139,7 @@ Set the following environment variables
 
 ---
 
-## Mongoose Models
+## 🧩 Mongoose Models
 
 ### Notification Model
 
@@ -139,8 +158,6 @@ This model stores information related to different types of notifications such a
 - `status` (String): Current status of the notification - `Sent`, `Failed`, or `Pending`.
 - `timestamps` (Boolean): Automatically adds `createdAt` and `updatedAt` timestamps.
 
----
-
 ### User Model
 
 This model stores details of users who can send notifications, along with their assigned roles.
@@ -156,35 +173,37 @@ This model stores details of users who can send notifications, along with their 
   - `push-sender`
 - `timestamps` (Boolean): Automatically includes `createdAt` and `updatedAt`.
 
+---
+
 ## 🚀 API Routes
 
 ### Notification Routes
 
-| Method | Endpoint                     | Description                            |
-| ------ | ---------------------------- | -------------------------------------- |
-| POST   | `/api/v1/notifications/send` | Create and send a new notification     |
-| GET    | `/api/v1/notifications`      | Retrieve all notifications             |
-| GET    | `/api/v1/notifications/:id`  | Retrieve a specific notification by ID |
-| PUT    | `/api/v1/notifications/:id`  | Update notification details by ID      |
-| DELETE | `/api/v1/notifications/:id`  | Delete a specific notification by ID   |
+| Method | Endpoint                     | Description                            | Request Body                                                                                  | Example Response (200)                                          |
+| ------ | ---------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| POST   | `/api/v1/notifications/send` | Create and send a new notification     | `{ "type": "email", "message": "Hello!", "recipients": [{"email": "test@example.com"}] }`     | `{ "message": "Notification sent successfully" }`               |
+| GET    | `/api/v1/notifications`      | Retrieve all notifications             | N/A                                                                                           | `[ { "_id": "abc123", "type": "email", "message": "Hello!" } ]` |
+| GET    | `/api/v1/notifications/:id`  | Retrieve a specific notification by ID | N/A                                                                                           | `{ "_id": "abc123", "type": "email", "message": "Hello!" }`     |
+| PUT    | `/api/v1/notifications/:id`  | Update notification details by ID      | `{ "type": "push", "message": "Updated Message", "recipients": [{"deviceToken": "xyz123"}] }` | `{ "message": "Notification updated successfully" }`            |
+| DELETE | `/api/v1/notifications/:id`  | Delete a specific notification by ID   | N/A                                                                                           | `{ "message": "Notification deleted successfully" }`            |
 
 ---
 
 ### User Routes
 
-| Method | Endpoint                         | Description                                  |
-| ------ | -------------------------------- | -------------------------------------------- |
-| POST   | `/api/v1/users`                  | Create a new user                            |
-| POST   | `/api/v1/users/login`            | User login                                   |
-| GET    | `/api/v1/users/profile`          | Retrieve details of a user                   |
-| GET    | `/api/v1/users/profile/:userId`  | Retrieve details of a user by ID             |
-| PATCH  | `/api/v1/users/update`           | Update specific user fields or roles         |
-| PUT    | `/api/v1/users/profile/:replace` | Replace an entire user profile with new data |
-| DELETE | `/api/v1/users/delete/:userId`   | Delete a specific user by ID                 |
+| Method | Endpoint                         | Description                                  | Request Body                                                                                                       | Example Response (200)                                            |
+| ------ | -------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| POST   | `/api/v1/users`                  | Create a new user                            | `{ "name": "Hania", "emailaddress": "haniyah@example.com", "password": "password123", "roles": ["email-sender"] }` | `{ "message": "User created successfully" }`                      |
+| POST   | `/api/v1/users/login`            | User login                                   | `{ "emailaddress": "haniyah@example.com", "password": "password123" }`                                             | `{ "token": "jwt-token-here" }`                                   |
+| GET    | `/api/v1/users/profile`          | Retrieve details of a user                   | N/A                                                                                                                | `{ "_id": "123abc", "name": "Hania", "roles": ["email-sender"] }` |
+| GET    | `/api/v1/users/profile/:userId`  | Retrieve details of a user by ID             | N/A                                                                                                                | `{ "_id": "123abc", "name": "Hania", "roles": ["email-sender"] }` |
+| PATCH  | `/api/v1/users/update`           | Update specific user fields or roles         | `{ "roles": ["sms-sender"] }`                                                                                      | `{ "message": "User updated successfully" }`                      |
+| PUT    | `/api/v1/users/profile/:replace` | Replace an entire user profile with new data | `{ "name": "New Name", "emailaddress": "new@example.com", "password": "newpass", "roles": ["push-sender"] }`       | `{ "message": "User profile replaced successfully" }`             |
+| DELETE | `/api/v1/users/delete/:userId`   | Delete a specific user by ID                 | N/A                                                                                                                | `{ "message": "User deleted successfully" }`                      |
 
 ---
 
-## Authentication & Authorization
+## 🛡️ Authentication & Authorization
 
 - **`authenticate` Middleware**: Verifies JWT from the `Authorization` header. Attaches decoded user info to `req.user`. Handles expired or invalid tokens.
 
