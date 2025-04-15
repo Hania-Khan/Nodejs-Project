@@ -2,8 +2,6 @@
 
 A robust and scalable microservice built using Node.js, Express, Kafka, and MongoDB to manage and deliver various types of notifications (Email, SMS, Push) with secure user management using JWT Authentication.
 
----
-
 ## 🛠️ Pre-requisites
 
 Before running the project, make sure you have the following installed on your machine:
@@ -11,8 +9,6 @@ Before running the project, make sure you have the following installed on your m
 - [Node.js](https://nodejs.org/) (v14 or higher recommended)
 - [npm](https://www.npmjs.com/) (comes with Node.js)
 - [MongoDB](https://www.mongodb.com/) & [MySQL](https://www.mysql.com/)
-
----
 
 ## 📦 Project Setup Guide
 
@@ -54,8 +50,6 @@ docker build -t node-app-image-1 .
 - Jenkins-ssh-agent
 - Node-App
 
----
-
 ## 📁 Project Structure
 
 | Name          | Description                                                                       |
@@ -68,8 +62,6 @@ docker build -t node-app-image-1 .
 | `model/`      | Mongoose models for MongoDB schema definitions.                                   |
 | `route/`      | Defines all API endpoints and Express.js routing logic.                           |
 | `service/`    | Contains core business logic and reusable integrations (e.g., Email, Push).       |
-
----
 
 ## 🐳 Docker Setup
 
@@ -123,8 +115,6 @@ All services are configured to run in a `shared-network` so they can communicate
   docker build -t node-app-image-1 .
   ```
 
----
-
 ## 🔐 Environment Variable
 
 Set the following environment variables
@@ -136,8 +126,6 @@ Set the following environment variables
 - `JWT_SECRET=`
 - `KAFKA_TOPIC=Test_Topic`
 - `KAFKA_BROKER=broker:9092`
-
----
 
 ## 🧩 Mongoose Models
 
@@ -173,8 +161,6 @@ This model stores details of users who can send notifications, along with their 
   - `push-sender`
 - `timestamps` (Boolean): Automatically includes `createdAt` and `updatedAt`.
 
----
-
 ## 🚀 API Routes
 
 ### Notification Routes
@@ -201,8 +187,6 @@ This model stores details of users who can send notifications, along with their 
 | PUT    | `/api/v1/users/profile/:replace` | Replace an entire user profile with new data | `{ "name": "New Name", "emailaddress": "new@example.com", "password": "newpass", "roles": ["push-sender"] }`       | `{ "message": "User profile replaced successfully" }`             |
 | DELETE | `/api/v1/users/delete/:userId`   | Delete a specific user by ID                 | N/A                                                                                                                | `{ "message": "User deleted successfully" }`                      |
 
----
-
 ## 🛡️ Authentication & Authorization
 
 - **`authenticate` Middleware**: Verifies JWT from the `Authorization` header. Attaches decoded user info to `req.user`. Handles expired or invalid tokens.
@@ -210,5 +194,3 @@ This model stores details of users who can send notifications, along with their 
 - **`roleMiddleware`**: Restricts access based on user roles. Only allows users with specified roles to access protected routes.
 
 - **`validateNotificationRequest`**: Validates incoming notification requests using Joi. Ensures required fields are present based on the notification type (email, sms, push).
-
----
