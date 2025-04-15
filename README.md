@@ -74,3 +74,48 @@ MONGO_URI=
 - `KAFKA_BROKER=broker:9092`
 
 ---
+
+## Mongoose Models
+
+### 🔸 Notification Model
+
+This model stores information related to different types of notifications such as Email, SMS, and Push.
+
+#### Fields
+
+- `type` (String): Type of notification - can be `email`, `sms`, or `push`.
+- `content` (String): The message content of the notification.
+- `recipients` (Object - Nested Schema):
+  - `email` (String): Email address (for email type).
+  - `deviceToken` (String): Device token (for push type).
+  - `phoneNumber` (String): Phone number (for SMS type).
+- `subject` (String): Subject of the notification (only for email type).
+- `title` (String): Title of the notification (only for push type).
+- `status` (String): Current status of the notification - `Sent`, `Failed`, or `Pending`.
+- `timestamps` (Boolean): Automatically adds `createdAt` and `updatedAt` timestamps.
+
+#### Indexing
+
+- `type`
+- `status`
+
+---
+
+### 🔸 User Model
+
+This model stores details of users who can send notifications, along with their assigned roles.
+
+#### Fields
+
+- `name` (String): Full name of the user.
+- `emailaddress` (String): Unique email address used for authentication.
+- `password` (String): Hashed password.
+- `roles` (Array of Strings): Roles assigned to the user. Possible values:
+  - `email-sender`
+  - `sms-sender`
+  - `push-sender`
+- `timestamps` (Boolean): Automatically includes `createdAt` and `updatedAt`.
+
+#### Indexing
+
+- `emailaddress`
