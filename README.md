@@ -1,4 +1,4 @@
-## 🚀 Project Setup Guide
+## Project Setup Guide
 
 Follow the steps below to set up and run the project locally:
 
@@ -35,17 +35,16 @@ Node-App
 
 ---
 
-## 🧾 Code Structure
+## Code Structure
 
-The project follows a modular folder structure to ensure maintainability and scalability:
-📁 controller/ → Handles incoming requests and sends responses.
-📁 service/ → Contains business logic and reusable integrations (e.g., Email, Push).
-📁 route/ → Defines all Express.js routes.
-📁 model/ → Mongoose models for MongoDB schema definitions.
-📁 middleware/ → Custom middleware for authentication, error handling, etc.
-📁 Kafka/ → Kafka setup, producers, consumers, and related configs.
-📁 MongoDB/ → Configuration for running MongoDB container (e.g., docker-compose or Dockerfile).
-📁 Jenkins/ → Jenkins pipeline setup and container configuration.
+- controller/ → Handles incoming requests and sends responses.
+- service/ → Contains business logic and reusable integrations (e.g., Email, Push).
+- route/ → Defines all Express.js routes.
+- model/ → Mongoose models for MongoDB schema definitions.
+- middleware/ → Custom middleware for authentication, error handling, etc.
+- Kafka/ → Kafka setup, producers, consumers, and related configs.
+- MongoDB/ → Configuration for running MongoDB container (e.g., docker-compose or Dockerfile).
+- Jenkins/ → Jenkins pipeline setup and container configuration.
 
 ---
 
@@ -53,7 +52,7 @@ The project follows a modular folder structure to ensure maintainability and sca
 
 ## All services are configured to run in a `shared-network` so they can communicate seamlessly.
 
-### 🔹 MongoDB
+### MongoDB
 
 - **Images**: `mongo`, `mongo-express`
 - **MongoDB**:
@@ -66,7 +65,7 @@ The project follows a modular folder structure to ensure maintainability and sca
 
 ---
 
-### 🔹 Kafka
+### Kafka
 
 - **Images**: `apache/kafka`, `provectuslabs/kafka-ui`
 - **Apache Kafka**:
@@ -87,7 +86,7 @@ The project follows a modular folder structure to ensure maintainability and sca
 
 ---
 
-### 🔹 Jenkins
+### Jenkins
 
 - **Images**:
   - `jenkins/jenkins` (custom Dockerfile)
@@ -100,7 +99,7 @@ The project follows a modular folder structure to ensure maintainability and sca
 
 ---
 
-### 🔹 Node App
+### Node App
 
 - **Image Build**:
   ```bash
@@ -113,10 +112,9 @@ Set the following environment variables
 
 ---
 
-### 🔹 .env File
+### .env File
 
-MONGO_URI=
-
+- `MONGO_URI=`
 - `APP_PORT=4001`
 - `JWT_SECRET=`
 - `KAFKA_TOPIC=Test_Topic`
@@ -126,7 +124,7 @@ MONGO_URI=
 
 ## Mongoose Models
 
-### 🔸 Notification Model
+### Notification Model
 
 This model stores information related to different types of notifications such as Email, SMS, and Push.
 
@@ -150,7 +148,7 @@ This model stores information related to different types of notifications such a
 
 ---
 
-### 🔸 User Model
+### User Model
 
 This model stores details of users who can send notifications, along with their assigned roles.
 
@@ -171,7 +169,7 @@ This model stores details of users who can send notifications, along with their 
 
 ## 🚀 API Routes
 
-### 📩 Notification Routes
+### Notification Routes
 
 | Method | Endpoint                     | Description                            |
 | ------ | ---------------------------- | -------------------------------------- |
@@ -183,7 +181,7 @@ This model stores details of users who can send notifications, along with their 
 
 ---
 
-### 👤 User Routes
+### User Routes
 
 | Method | Endpoint                         | Description                                  |
 | ------ | -------------------------------- | -------------------------------------------- |
@@ -194,3 +192,15 @@ This model stores details of users who can send notifications, along with their 
 | PATCH  | `/api/v1/users/update`           | Update specific user fields or roles         |
 | PUT    | `/api/v1/users/profile/:replace` | Replace an entire user profile with new data |
 | DELETE | `/api/v1/users/delete/:userId`   | Delete a specific user by ID                 |
+
+---
+
+## Authentication & Authorization
+
+- **`authenticate` Middleware**: Verifies JWT from the `Authorization` header. Attaches decoded user info to `req.user`. Handles expired or invalid tokens.
+
+- **`roleMiddleware`**: Restricts access based on user roles. Only allows users with specified roles to access protected routes.
+
+- **`validateNotificationRequest`**: Validates incoming notification requests using Joi. Ensures required fields are present based on the notification type (email, sms, push).
+
+---
