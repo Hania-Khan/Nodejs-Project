@@ -23,7 +23,7 @@ KAFKA_BROKER=broker:9092
 
 docker build -t node-app-image-1 .
 
-### 4. Run Required Containers
+### 4. Containers Required
 
 Mongo
 Mongo-Express
@@ -110,8 +110,6 @@ Node-App
 
 Set the following environment variables
 
----
-
 ### .env File
 
 - `MONGO_URI=`
@@ -141,11 +139,6 @@ This model stores information related to different types of notifications such a
 - `status` (String): Current status of the notification - `Sent`, `Failed`, or `Pending`.
 - `timestamps` (Boolean): Automatically adds `createdAt` and `updatedAt` timestamps.
 
-#### Indexing
-
-- `type`
-- `status`
-
 ---
 
 ### User Model
@@ -162,10 +155,6 @@ This model stores details of users who can send notifications, along with their 
   - `sms-sender`
   - `push-sender`
 - `timestamps` (Boolean): Automatically includes `createdAt` and `updatedAt`.
-
-#### Indexing
-
-- `emailaddress`
 
 ## 🚀 API Routes
 
@@ -187,8 +176,8 @@ This model stores details of users who can send notifications, along with their 
 | ------ | -------------------------------- | -------------------------------------------- |
 | POST   | `/api/v1/users`                  | Create a new user                            |
 | POST   | `/api/v1/users/login`            | User login                                   |
-| GET    | `/api/v1/users/profile`          | Retrieve details of all users                |
-| GET    | `/api/v1/users/profile/:userId`  | Retrieve details of a specific user by ID    |
+| GET    | `/api/v1/users/profile`          | Retrieve details of a user                   |
+| GET    | `/api/v1/users/profile/:userId`  | Retrieve details of a user by ID             |
 | PATCH  | `/api/v1/users/update`           | Update specific user fields or roles         |
 | PUT    | `/api/v1/users/profile/:replace` | Replace an entire user profile with new data |
 | DELETE | `/api/v1/users/delete/:userId`   | Delete a specific user by ID                 |
