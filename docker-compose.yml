@@ -14,8 +14,10 @@ services:
       APP_PORT: 4001
       JWT_SECRET: 3f@9!kL2$zX8^pQwR&7*YtN0oV!mJd
       KAFKA_BROKER: broker:9092
-    #depends_on:
-    #  - mongodb:mongo
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user123
+      MYSQL_ROOT_PASSWORD: root123
     networks:
       - shared-network  # Use the shared network
 

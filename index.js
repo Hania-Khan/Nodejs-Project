@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const mysql = require("mysql");
 const morgan = require("morgan");
 const cors = require("cors");
 const { Kafka } = require("kafkajs");
@@ -16,6 +17,25 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
+
+// MySQL Connection
+const db = mysql.createConnection({
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+});
+
+// Connect to MySQL
+db.connect((err) => {
+  if (err) {
+    console.error("Error connecting to MySQL: " + err.stack);
+    return;
+  }
+  console.log("Connected to MySQL");
+});
+
+console.log("Attempting to connect to MongoDB...");
+console.log("Mongo URI is:", process.env.MONGO_URI);
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -53,13 +73,13 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-const startKafka = async () => {
-  try {
-    await runProducer();
-    await runConsumer();
-  } catch (err) {
-    console.error("Error starting Kafka services:", err);
-  }
-};
+// const startKafka = async () => {
+//   try {
+//     await runProducer();
+//     await runConsumer();
+//   } catch (err) {
+//     console.error("Error starting Kafka services:", err);
+//   }
+// };
 
-startKafka();
+// startKafka();
