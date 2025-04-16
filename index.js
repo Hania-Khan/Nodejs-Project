@@ -71,13 +71,13 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// const startKafka = async () => {
-//   try {
-//     await runProducer();
-//     await runConsumer();
-//   } catch (err) {
-//     console.error("Error starting Kafka services:", err);
-//   }
-// };
+const startKafka = async () => {
+  try {
+    await runProducer();
+    await runConsumer();
+  } catch (err) {
+    console.error("Error starting Kafka services:", err);
+  }
+};
 
-// startKafka();
+startKafka();
