@@ -20,6 +20,7 @@ app.use(cors());
 
 // MySQL Connection
 const db = mysql.createConnection({
+  host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
@@ -33,9 +34,6 @@ db.connect((err) => {
   }
   console.log("Connected to MySQL");
 });
-
-console.log("Attempting to connect to MongoDB...");
-console.log("Mongo URI is:", process.env.MONGO_URI);
 
 mongoose
   .connect(process.env.MONGO_URI, {
