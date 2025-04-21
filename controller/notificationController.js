@@ -11,9 +11,9 @@ exports.createNotification = async (req, res) => {
 
     const userRoles = req.user.roles || [];
     const allowedNotificationRoles = {
-      email: "email-sender",
-      sms: "sms-sender",
-      push: "push-sender",
+      email: "email",
+      sms: "sms",
+      push: "push",
     };
 
     const requiredRole = allowedNotificationRoles[req.body.type];
