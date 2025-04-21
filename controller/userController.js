@@ -6,12 +6,15 @@ exports.createUser = async (req, res) => {
   try {
     //Destructure the request body
     // Check if the required fields are present
-    const { name, emailaddress, password, roles } = req.body;
+    const { name, emailaddress, password, phoneNumber, deviceToken, roles } =
+      req.body;
     //Basic validation for required fields
     if (
       !name ||
       !emailaddress ||
       !password ||
+      !phoneNumber ||
+      !deviceToken ||
       !roles ||
       !Array.isArray(roles)
     ) {
@@ -24,12 +27,20 @@ exports.createUser = async (req, res) => {
       name,
       emailaddress,
       password,
+      phoneNumber,
+      deviceToken,
       roles
     );
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user._id, emailaddress: user.emailaddress, roles: user.roles },
+      {
+        id: user._id,
+        emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
+        roles: user.roles,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -86,7 +97,7 @@ exports.replaceUser = async (req, res) => {
       roles,
     });
 
-    // Generate a new token with updated 
+    // Generate a new token with updated
     const newToken = jwt.sign(
       { id: user._id, emailaddress: user.emailaddress, roles: user.roles },
       process.env.JWT_SECRET,

@@ -1,10 +1,10 @@
-const User = require("../model/user");
+const User = require("../model/mongo/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 class UserService {
   // User Registration
-  static async createUser(name, emailaddress, password, roles) {
+  static async createUser(name, emailaddress, password, phoneNumber, deviceToken, roles) {
     
     //Check for existing user (case-insensitive)
     const existingUser = await User.findOne({
@@ -16,7 +16,7 @@ class UserService {
     }
  
     //Create and save new user
-    const user = new User({ name, emailaddress, password, roles });
+    const user = new User({ name, emailaddress, password, phoneNumber, deviceToken, roles });
     await user.save();
     return user;
   }

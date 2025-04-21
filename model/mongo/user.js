@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
+    deviceToken: {
+      type: String,
+      required: true,
+    },
     roles: {
       type: [String],
       enum: ["email-sender", "sms-sender", "push-sender"],

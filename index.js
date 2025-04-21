@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const mysql = require("mysql");
+const { Sequelize } = require("sequelize");
 const morgan = require("morgan");
 const cors = require("cors");
 const { Kafka } = require("kafkajs");
@@ -18,22 +19,29 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 
-// MySQL Connection
-const db = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-});
-
-// Connect to MySQL
-db.connect((err) => {
-  if (err) {
-    console.error("Error connecting to MySQL: " + err.stack);
-    return;
+// Sequelize Connection
+const sequelize = new Sequelize(
+  process.env.MYSQL_DATABASE,
+  process.env.MYSQL_USER,
+  process.env.MYSQL_PASSWORD,
+  {
+    host: process.env.MYSQL_HOST,
+    dialect: "mysql",
+    logging: false,
   }
-  console.log("Connected to MySQL");
-});
+);
+
+// Test the connection
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("✅ Connected to MySQL using Sequelize");
+  })
+  .catch((err) => {
+    console.error("❌ Unable to connect to the database:", err);
+  });
+
+module.exports = sequelize;
 
 mongoose
   .connect(process.env.MONGO_URI, {
