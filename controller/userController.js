@@ -52,6 +52,8 @@ exports.createUser = async (req, res) => {
         id: user._id,
         name: user.name,
         emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
         roles: user.roles,
       },
       token,
@@ -87,19 +89,28 @@ exports.loginUser = async (req, res) => {
 //Replace User--PUT request
 exports.replaceUser = async (req, res) => {
   try {
-    const { name, emailaddress, password, roles } = req.body;
+    const { name, emailaddress, password, phoneNumber, deviceToken, roles } =
+      req.body;
     const userId = req.user.id;
 
     const user = await UserService.updateUser(userId, {
       name,
       emailaddress,
       password,
+      phoneNumber,
+      deviceToken,
       roles,
     });
 
     // Generate a new token with updated
     const newToken = jwt.sign(
-      { id: user._id, emailaddress: user.emailaddress, roles: user.roles },
+      {
+        id: user._id,
+        emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
+        roles: user.roles,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -110,6 +121,8 @@ exports.replaceUser = async (req, res) => {
         id: user._id,
         name: user.name,
         emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
         roles: user.roles,
       },
       token: newToken, // Return the updated token
@@ -134,7 +147,13 @@ exports.updateUser = async (req, res) => {
 
     // Generate a new token with updated roles
     const newToken = jwt.sign(
-      { id: user._id, emailaddress: user.emailaddress, roles: user.roles },
+      {
+        id: user._id,
+        emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
+        roles: user.roles,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -145,6 +164,8 @@ exports.updateUser = async (req, res) => {
         id: user._id,
         name: user.name,
         emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
         roles: user.roles,
       },
       token: newToken,
@@ -172,6 +193,8 @@ exports.getUser = async (req, res) => {
         id: user._id,
         name: user.name,
         emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
         roles: user.roles,
       },
     });
@@ -198,6 +221,8 @@ exports.getUserById = async (req, res) => {
         id: user._id,
         name: user.name,
         emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
         roles: user.roles,
       },
     });

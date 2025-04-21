@@ -4,8 +4,14 @@ const jwt = require("jsonwebtoken");
 
 class UserService {
   // User Registration
-  static async createUser(name, emailaddress, password, phoneNumber, deviceToken, roles) {
-    
+  static async createUser(
+    name,
+    emailaddress,
+    password,
+    phoneNumber,
+    deviceToken,
+    roles
+  ) {
     //Check for existing user (case-insensitive)
     const existingUser = await User.findOne({
       emailaddress: { $regex: new RegExp(`^${emailaddress}$`, "i") },
@@ -14,9 +20,16 @@ class UserService {
     if (existingUser) {
       throw new Error("User with this email already exists");
     }
- 
+
     //Create and save new user
-    const user = new User({ name, emailaddress, password, phoneNumber, deviceToken, roles });
+    const user = new User({
+      name,
+      emailaddress,
+      password,
+      phoneNumber,
+      deviceToken,
+      roles,
+    });
     await user.save();
     return user;
   }
@@ -39,7 +52,13 @@ class UserService {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user._id, email: user.emailaddress, roles: user.roles },
+      {
+        id: user._id,
+        email: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
+        roles: user.roles,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -47,7 +66,10 @@ class UserService {
     return { token, user };
   }
 
-  static async replaceUser(userId, { name, emailaddress, password, roles }) {
+  static async replaceUser(
+    userId,
+    { name, emailaddress, password, phoneNumber, deviceToken, roles }
+  ) {
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
@@ -74,14 +96,15 @@ class UserService {
     await user.save();
     return user;
   }
-  
+
   static async updateUser(userId, updates) {
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
     }
 
-    const { name, emailaddress, password, roles } = updates;
+    const { name, emailaddress, password, phoneNumber, deviceToken, roles } =
+      updates;
 
     // Check if email is being updated and ensure it's unique
     if (emailaddress && emailaddress !== user.emailaddress) {
@@ -109,20 +132,17 @@ class UserService {
     return user;
   }
 
+  // Get User by ID
+  static async getUserById(userId) {
+    const user = await User.findById(userId);
+    return user;
+  }
 
- // Get User by ID
- static async getUserById(userId) {
-  const user = await User.findById(userId);
-  return user;
-}
-
-// Delete User by ID
-static async deleteUserById(userId) {
-  const user = await User.findByIdAndDelete(userId);
-  return user;
-}
-
-
+  // Delete User by ID
+  static async deleteUserById(userId) {
+    const user = await User.findByIdAndDelete(userId);
+    return user;
+  }
 }
 
 module.exports = UserService;

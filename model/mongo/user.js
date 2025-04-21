@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
     },
     roles: {
       type: [String],
-      enum: ["email-sender", "sms-sender", "push-sender"],
+      enum: ["email", "sms", "push"],
       required: true,
     },
   },
