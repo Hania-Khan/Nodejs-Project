@@ -161,6 +161,13 @@ This model stores details of users who can send notifications, along with their 
   - `push-sender`
 - `timestamps` (Boolean): Automatically includes `createdAt` and `updatedAt`.
 
+## Architecture
+
+### Entity Relationship Diagram
+
+![ERD](./ERD-Updated%20ERD.drawio.png)
+![ERD](./ERD-Page-2.drawio.png)
+
 ## 🚀 API Routes
 
 ### Notification Routes
