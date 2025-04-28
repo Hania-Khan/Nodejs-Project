@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../../index");
 const bcrypt = require("bcrypt");
 
-const UserMySQL = sequelize.define(
+const User = sequelize.define(
   "User",
   {
     name: {
@@ -47,4 +47,4 @@ User.beforeCreate(async (user) => {
   }
 });
 
-module.exports = UserMySQL;
+module.exports = User;

@@ -1,4 +1,4 @@
-const UserMySQL = require("../../model/mysql/user");
+const User = require("../../model/mysql/userMysql");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -13,7 +13,7 @@ class UserService {
     roles
   ) {
     // Check for existing user (case-insensitive)
-    const existingUser = await UserMySQL.findOne({
+    const existingUser = await User.findOne({
       where: { emailaddress: emailaddress.toLowerCase() },
     });
 
@@ -22,7 +22,7 @@ class UserService {
     }
 
     // Create and save new user
-    const user = await UserMySQL.create({
+    const user = await User.create({
       name,
       emailaddress,
       password,
@@ -36,7 +36,7 @@ class UserService {
 
   // User Login
   static async loginUser(emailaddress, password) {
-    const user = await UserMySQL.findOne({
+    const user = await User.findOne({
       where: { emailaddress: emailaddress.toLowerCase() },
     });
 
@@ -70,14 +70,14 @@ class UserService {
     userId,
     { name, emailaddress, password, phoneNumber, deviceToken, roles }
   ) {
-    const user = await UserMySQL.findByPk(userId);
+    const user = await User.findByPk(userId);
     if (!user) {
       throw new Error("User not found");
     }
 
     // Check if email is being updated and ensure it's unique
     if (emailaddress && emailaddress !== user.emailaddress) {
-      const existingUser = await UserMySQL.findOne({ where: { emailaddress } });
+      const existingUser = await User.findOne({ where: { emailaddress } });
       if (existingUser) {
         throw new Error("Email already in use");
       }
@@ -98,7 +98,7 @@ class UserService {
   }
 
   static async updateUser(userId, updates) {
-    const user = await UserMySQL.findByPk(userId);
+    const user = await User.findByPk(userId);
     if (!user) {
       throw new Error("User not found");
     }
@@ -108,7 +108,7 @@ class UserService {
 
     // Check if email is being updated and ensure it's unique
     if (emailaddress && emailaddress !== user.emailaddress) {
-      const existingUser = await UserMySQL.findOne({ where: { emailaddress } });
+      const existingUser = await User.findOne({ where: { emailaddress } });
       if (existingUser) {
         throw new Error("Email already in use");
       }
@@ -134,13 +134,13 @@ class UserService {
 
   // Get User by ID
   static async getUserById(userId) {
-    const user = await UserMySQL.findByPk(userId);
+    const user = await User.findByPk(userId);
     return user;
   }
 
   // Delete User by ID
   static async deleteUserById(userId) {
-    const user = await UserMySQL.findByPk(userId);
+    const user = await User.findByPk(userId);
     if (user) {
       await user.destroy();
       return user;

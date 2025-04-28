@@ -1,14 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const mysql = require("mysql");
 const { Sequelize } = require("sequelize");
 const morgan = require("morgan");
 const cors = require("cors");
 const { Kafka } = require("kafkajs");
 require("dotenv").config();
 
-const notificationRoutes = require("./route/mysql-route/notificationRoutes");
-const userRoutes = require("./route/mysql-route/userRoutes");
+const notificationRoutes = require("./route/mysql-route/notificationRoutesMysql");
+const userRoutes = require("./route/mysql-route/userRoutesMysql");
 
 const { runProducer } = require("./Kafka/producer");
 const { runConsumer } = require("./Kafka/consumer");
@@ -43,13 +42,13 @@ sequelize
 
 module.exports = sequelize;
 
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Failed to connect to MongoDB:", err));
+// mongoose
+//   .connect(process.env.MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then(() => console.log("Connected to MongoDB"))
+//   .catch((err) => console.error("Failed to connect to MongoDB:", err));
 
 // Routes
 app.use("/api/v1/notifications", notificationRoutes);
@@ -79,13 +78,13 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-const startKafka = async () => {
-  try {
-    await runProducer();
-    await runConsumer();
-  } catch (err) {
-    console.error("Error starting Kafka services:", err);
-  }
-};
+// const startKafka = async () => {
+//   try {
+//     await runProducer();
+//     await runConsumer();
+//   } catch (err) {
+//     console.error("Error starting Kafka services:", err);
+//   }
+// };
 
-startKafka();
+// startKafka();

@@ -7,7 +7,7 @@ const {
   getUser,
   getUserById,
   deleteUserById,
-} = require("../../controller/mysql/userController");
+} = require("../../controller/mysql/userControllerMysql");
 
 const router = express.Router();
 

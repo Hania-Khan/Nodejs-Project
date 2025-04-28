@@ -1,4 +1,4 @@
-const Notification = require("../../model/mongo/notification");
+const Notification = require("../../model/mongo/notificationMongo");
 const NotificationService = require("../../service/Mongo-service/notificationService");
 
 exports.createNotification = async (req, res) => {

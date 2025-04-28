@@ -1,5 +1,5 @@
-const NotificationMySQL = require("../model/mysql/notification");
-const NotificationService = require("../service/Mongo-service/notificationService"); // Reuse same NotificationService
+const Notification = require("../../model/mysql/notificationMysql");
+const NotificationService = require("../../service/Mysql-service/notificationServiceMysql");
 
 exports.createNotification = async (req, res) => {
   try {
@@ -22,8 +22,6 @@ exports.createNotification = async (req, res) => {
         message: `You do not have the required role to send ${req.body.type} notifications.`,
       });
     }
-
-    // Set sender based on type
     let sender;
     if (req.body.type === "email") {
       sender = req.user.email;
@@ -68,7 +66,7 @@ exports.createNotification = async (req, res) => {
       title: req.body.title || "",
     });
 
-    const notification = await NotificationMySQL.create({
+    const notification = await Notification.create({
       type: req.body.type,
       content: req.body.content,
       recipients, // Sequelize handles JSON automatically
@@ -92,11 +90,10 @@ exports.createNotification = async (req, res) => {
   }
 };
 
-// GET: Retrieve all notifications
 exports.getAllNotifications = async (req, res) => {
   try {
-    const notifications = await NotificationMySQL.findAll({
-      order: [['createdAt', 'DESC']],
+    const notifications = await Notification.findAll({
+      order: [["createdAt", "DESC"]],
     });
     res.status(200).json(notifications);
   } catch (error) {
@@ -107,10 +104,9 @@ exports.getAllNotifications = async (req, res) => {
   }
 };
 
-// GET: Retrieve a single notification by ID
 exports.getNotificationById = async (req, res) => {
   try {
-    const notification = await NotificationMySQL.findByPk(req.params.id);
+    const notification = await Notification.findByPk(req.params.id);
     if (!notification) {
       return res.status(404).json({ message: "Notification not found" });
     }
@@ -123,10 +119,9 @@ exports.getNotificationById = async (req, res) => {
   }
 };
 
-// PUT: Update a notification by ID
 exports.updateNotification = async (req, res) => {
   try {
-    const [updatedRowsCount, updatedRows] = await NotificationMySQL.update(
+    const [updatedRowsCount, updatedRows] = await Notification.update(
       req.body,
       {
         where: { id: req.params.id },
@@ -150,10 +145,9 @@ exports.updateNotification = async (req, res) => {
   }
 };
 
-// DELETE: Delete a notification by ID
 exports.deleteNotification = async (req, res) => {
   try {
-    const deletedRowsCount = await NotificationMySQL.destroy({
+    const deletedRowsCount = await Notification.destroy({
       where: { id: req.params.id },
     });
 

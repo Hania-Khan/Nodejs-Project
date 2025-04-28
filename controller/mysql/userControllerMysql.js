@@ -1,4 +1,4 @@
-const UserService = require("../../service/mysql/userService");
+const UserService = require("../../service/Mysql-service/userServiceMysql");
 const jwt = require("jsonwebtoken");
 
 // Create User -- POST request

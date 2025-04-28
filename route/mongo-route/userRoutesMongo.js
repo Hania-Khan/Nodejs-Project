@@ -8,7 +8,7 @@ const {
   getUser,
   getUserById,
   deleteUserById,
-} = require("../../controller/mongo/userController");
+} = require("../../controller/mongo/userControllerMongo");
 
 const router = express.Router();
 
