@@ -1,5 +1,5 @@
 const express = require("express");
-const { authenticate } = require("../middleware/authMiddleware");
+const { authenticate } = require("../../middleware/authMiddleware");
 const {
   createUser,
   loginUser,
@@ -8,7 +8,7 @@ const {
   getUser,
   getUserById,
   deleteUserById,
-} = require("../controller/userController");
+} = require("../../controller/mongo/userController");
 
 const router = express.Router();
 

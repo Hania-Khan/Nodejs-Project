@@ -1,41 +1,23 @@
+const UserService = require("../../service/mysql/userService");
 const jwt = require("jsonwebtoken");
-const UserService = require("../service/userService");
 
-//Create User--POST request
+// Create User -- POST request
 exports.createUser = async (req, res) => {
   try {
-    //Destructure the request body
-    // Check if the required fields are present
-    const { name, emailaddress, password, phoneNumber, deviceToken, roles } =
-      req.body;
-    //Basic validation for required fields
-    if (
-      !name ||
-      !emailaddress ||
-      !password ||
-      !phoneNumber ||
-      !deviceToken ||
-      !roles ||
-      !Array.isArray(roles)
-    ) {
-      return res.status(400).json({
-        message: "Name, email, password, and roles are required",
-      });
+    const { name, emailaddress, password, phoneNumber, deviceToken, roles } = req.body;
+
+    // Basic validation for required fields
+    if (!name || !emailaddress || !password || !phoneNumber || !deviceToken || !roles || !Array.isArray(roles)) {
+      return res.status(400).json({ message: "Name, email, password, phone number, device token, and roles are required" });
     }
-    // Create the user using the UserService
-    const user = await UserService.createUser(
-      name,
-      emailaddress,
-      password,
-      phoneNumber,
-      deviceToken,
-      roles
-    );
+
+    // Create the user
+    const user = await UserService.createUser(name, emailaddress, password, phoneNumber, deviceToken, roles);
 
     // Generate JWT token
     const token = jwt.sign(
       {
-        id: user._id,
+        id: user.id,
         emailaddress: user.emailaddress,
         phoneNumber: user.phoneNumber,
         deviceToken: user.deviceToken,
@@ -44,12 +26,12 @@ exports.createUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-    //sUCCESSFUL RESPONSE
-    // Send the response with user details and token
+
+    // Successful response
     res.status(201).json({
       message: "User created successfully",
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         emailaddress: user.emailaddress,
         phoneNumber: user.phoneNumber,
@@ -64,14 +46,13 @@ exports.createUser = async (req, res) => {
   }
 };
 
+// Login User -- POST request
 exports.loginUser = async (req, res) => {
   try {
     const { emailaddress, password } = req.body;
 
     if (!emailaddress || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
     const { token } = await UserService.loginUser(emailaddress, password);
@@ -86,26 +67,18 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-//Replace User--PUT request
+// Replace User -- PUT request
 exports.replaceUser = async (req, res) => {
   try {
-    const { name, emailaddress, password, phoneNumber, deviceToken, roles } =
-      req.body;
+    const { name, emailaddress, password, phoneNumber, deviceToken, roles } = req.body;
     const userId = req.user.id;
 
-    const user = await UserService.updateUser(userId, {
-      name,
-      emailaddress,
-      password,
-      phoneNumber,
-      deviceToken,
-      roles,
-    });
+    const user = await UserService.replaceUser(userId, { name, emailaddress, password, phoneNumber, deviceToken, roles });
 
-    // Generate a new token with updated
+    // Generate a new token with updated information
     const newToken = jwt.sign(
       {
-        id: user._id,
+        id: user.id,
         emailaddress: user.emailaddress,
         phoneNumber: user.phoneNumber,
         deviceToken: user.deviceToken,
@@ -118,50 +91,7 @@ exports.replaceUser = async (req, res) => {
     res.status(200).json({
       message: "User updated successfully",
       user: {
-        id: user._id,
-        name: user.name,
-        emailaddress: user.emailaddress,
-        phoneNumber: user.phoneNumber,
-        deviceToken: user.deviceToken,
-        roles: user.roles,
-      },
-      token: newToken, // Return the updated token
-    });
-  } catch (error) {
-    console.error("Error updating user:", error);
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Update User--PATCH request
-exports.updateUser = async (req, res) => {
-  try {
-    const userId = req.user.id; // Get user ID from authentication middleware
-    const updates = req.body;
-
-    if (!Object.keys(updates).length) {
-      return res.status(400).json({ message: "No updates provided" });
-    }
-
-    const user = await UserService.updateUser(userId, updates);
-
-    // Generate a new token with updated roles
-    const newToken = jwt.sign(
-      {
-        id: user._id,
-        emailaddress: user.emailaddress,
-        phoneNumber: user.phoneNumber,
-        deviceToken: user.deviceToken,
-        roles: user.roles,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    res.status(200).json({
-      message: "User updated successfully",
-      user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         emailaddress: user.emailaddress,
         phoneNumber: user.phoneNumber,
@@ -176,7 +106,50 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-//GET REQUEST -- get user details
+// Update User -- PATCH request
+exports.updateUser = async (req, res) => {
+  try {
+    const userId = req.user.id; // Get user ID from authentication middleware
+    const updates = req.body;
+
+    if (!Object.keys(updates).length) {
+      return res.status(400).json({ message: "No updates provided" });
+    }
+
+    const user = await UserService.updateUser(userId, updates);
+
+    // Generate a new token with updated information
+    const newToken = jwt.sign(
+      {
+        id: user.id,
+        emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
+        roles: user.roles,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: {
+        id: user.id,
+        name: user.name,
+        emailaddress: user.emailaddress,
+        phoneNumber: user.phoneNumber,
+        deviceToken: user.deviceToken,
+        roles: user.roles,
+      },
+      token: newToken,
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get User by ID -- GET request
 exports.getUser = async (req, res) => {
   try {
     const userId = req.user.id; // Get the userId from the authenticated user (from the JWT payload)
@@ -190,7 +163,7 @@ exports.getUser = async (req, res) => {
     res.status(200).json({
       message: "User retrieved successfully",
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         emailaddress: user.emailaddress,
         phoneNumber: user.phoneNumber,
@@ -204,11 +177,10 @@ exports.getUser = async (req, res) => {
   }
 };
 
-// Get User by ID
+// Get User by ID from URL params -- GET request
 exports.getUserById = async (req, res) => {
   try {
-    const { userId } = req.params; // Get the userId from the route parameter
-
+    const { userId } = req.params;
     const user = await UserService.getUserById(userId);
 
     if (!user) {
@@ -217,25 +189,18 @@ exports.getUserById = async (req, res) => {
 
     res.status(200).json({
       message: "User retrieved successfully",
-      user: {
-        id: user._id,
-        name: user.name,
-        emailaddress: user.emailaddress,
-        phoneNumber: user.phoneNumber,
-        deviceToken: user.deviceToken,
-        roles: user.roles,
-      },
+      user,
     });
   } catch (error) {
-    console.error("Error getting user:", error);
+    console.error("Error retrieving user:", error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// Delete User by ID
-exports.deleteUserById = async (req, res) => {
+// Delete User by ID -- DELETE request
+exports.deleteUser = async (req, res) => {
   try {
-    const { userId } = req.params; // Get the userId from the route parameter
+    const userId = req.user.id;
 
     const user = await UserService.deleteUserById(userId);
 
@@ -245,6 +210,7 @@ exports.deleteUserById = async (req, res) => {
 
     res.status(200).json({
       message: "User deleted successfully",
+      user,
     });
   } catch (error) {
     console.error("Error deleting user:", error);

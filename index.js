@@ -7,8 +7,8 @@ const cors = require("cors");
 const { Kafka } = require("kafkajs");
 require("dotenv").config();
 
-const notificationRoutes = require("./route/notificationRoutes");
-const userRoutes = require("./route/userRoutes");
+const notificationRoutes = require("./route/mysql-route/notificationRoutes");
+const userRoutes = require("./route/mysql-route/userRoutes");
 
 const { runProducer } = require("./Kafka/producer");
 const { runConsumer } = require("./Kafka/consumer");
@@ -35,7 +35,7 @@ const sequelize = new Sequelize(
 sequelize
   .authenticate()
   .then(() => {
-    console.log("✅ Connected to MySQL using Sequelize");
+    console.log("✅Connection has been established successfully.");
   })
   .catch((err) => {
     console.error("❌ Unable to connect to the database:", err);
