@@ -12,9 +12,9 @@ const sequelize = new Sequelize(
   }
 );
 
-// Test connection
-sequelize.authenticate()
+sequelize
+  .authenticate()
   .then(() => console.log("✅ MySQL connection established."))
-  .catch(err => console.error("❌ Unable to connect to MySQL:", err));
+  .catch((err) => console.error("❌ Unable to connect to MySQL:", err));
 
 module.exports = sequelize;
