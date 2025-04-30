@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const sequelize = require("./config/sequelize");
+const sequelize = require("./sequelize");
 const morgan = require("morgan");
 const cors = require("cors");
 const { Kafka } = require("kafkajs");
