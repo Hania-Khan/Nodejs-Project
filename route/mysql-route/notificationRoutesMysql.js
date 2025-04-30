@@ -9,7 +9,7 @@ const {
 const {
   authenticate,
   validateNotificationRequest,
-} = require("../middleware/authMiddleware");
+} = require("../../middleware/authMiddleware");
 
 const router = express.Router();
 

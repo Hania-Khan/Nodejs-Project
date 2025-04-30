@@ -198,7 +198,7 @@ exports.getUserById = async (req, res) => {
 };
 
 // Delete User by ID -- DELETE request
-exports.deleteUser = async (req, res) => {
+exports.deleteUserById = async (req, res) => {
   try {
     const userId = req.user.id;
 
