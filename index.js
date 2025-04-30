@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { Sequelize } = require("sequelize");
+const sequelize = require("./config/sequelize");
 const morgan = require("morgan");
 const cors = require("cors");
 const { Kafka } = require("kafkajs");
@@ -18,29 +18,25 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 
-// Sequelize- Object Relational Mapping (Connection)
-const sequelize = new Sequelize(
-  process.env.MYSQL_DATABASE,
-  process.env.MYSQL_USER,
-  process.env.MYSQL_PASSWORD,
-  {
-    host: process.env.MYSQL_HOST,
-    dialect: "mysql",
-    logging: false,
-  }
-);
-
-// Test the connection
+// Test MySQL Connection
 sequelize
   .authenticate()
   .then(() => {
-    console.log("✅Connection has been established successfully.");
+    console.log("✅ MySQL connected.");
   })
   .catch((err) => {
-    console.error("❌ Unable to connect to the database:", err);
+    console.error("❌ MySQL connection failed:", err);
   });
 
-module.exports = sequelize;
+// ✅ Sync all Sequelize models
+sequelize
+  .sync({ alter: true }) // or { force: true } to recreate tables every time
+  .then(() => {
+    console.log("✅ All models synced to MySQL.");
+  })
+  .catch((err) => {
+    console.error("❌ Model sync failed:", err);
+  });
 
 // mongoose
 //   .connect(process.env.MONGO_URI, {

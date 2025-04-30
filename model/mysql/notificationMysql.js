@@ -4,6 +4,12 @@ const { DataTypes } = require("sequelize");
 const Notification = sequelize.define(
   "Notification",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
     type: {
       type: DataTypes.ENUM("email", "sms", "push"),
       allowNull: false,
@@ -13,16 +19,16 @@ const Notification = sequelize.define(
       allowNull: false,
     },
     recipients: {
-      type: DataTypes.JSON, // because it's an array of objects
+      type: DataTypes.JSON,
       allowNull: false,
     },
     subject: {
       type: DataTypes.STRING,
-      allowNull: true, // required only if type = email (handle this in code)
+      allowNull: true,
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: true, // required only if type = push (handle this in code)
+      allowNull: true,
     },
     status: {
       type: DataTypes.ENUM("Sent", "Failed", "Pending"),
@@ -31,7 +37,7 @@ const Notification = sequelize.define(
     },
   },
   {
-    timestamps: true, // adds createdAt and updatedAt automatically
+    timestamps: true,
   }
 );
 

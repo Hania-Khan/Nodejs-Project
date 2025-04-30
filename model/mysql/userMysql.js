@@ -1,10 +1,15 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../index");
+const sequelize = require("../../config/sequelize");
 const bcrypt = require("bcrypt");
 
 const User = sequelize.define(
   "User",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -36,7 +41,9 @@ const User = sequelize.define(
       allowNull: false,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 // Hash password before saving
