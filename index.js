@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 
-// Sequelize Connection
+// Sequelize- Object Relational Mapping (Connection)
 const sequelize = new Sequelize(
   process.env.MYSQL_DATABASE,
   process.env.MYSQL_USER,
