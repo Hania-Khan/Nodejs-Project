@@ -4,7 +4,7 @@ services:
     image: mysql:5.7
     restart: always
     environment:
-      MYSQL_DATABASE: 'db-1'
+      MYSQL_DATABASE: 'db'
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'user123'
       MYSQL_ROOT_PASSWORD: 'root123'
@@ -15,7 +15,7 @@ services:
     volumes:
       - my-db:/var/lib/mysql
     networks:
-      - shared-network  # Connect Jenkins to the shared network
+      - shared-network  # Connect to the shared network
 
   mysql-workbench:
     image: lscr.io/linuxserver/mysql-workbench:latest
@@ -33,7 +33,7 @@ services:
       - 3001:3001
     restart: unless-stopped
     networks:
-      - shared-network  # Connect Jenkins to the shared network
+      - shared-network  # Connect to the shared network
 
 volumes:
   my-db:
