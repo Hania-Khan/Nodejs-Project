@@ -14,7 +14,7 @@ services:
       APP_PORT: 4001
       JWT_SECRET: 3f@9!kL2$zX8^pQwR&7*YtN0oV!mJd
       KAFKA_BROKER: broker:9092
-      MYSQL_URL: mysql://user:user123@db:3306/db
+      MYSQL_URL: mysql://user:user123@sql-db-1:3306/db
       MYSQL_DATABASE: db
       MYSQL_USER: user
       MYSQL_PASSWORD: user123
