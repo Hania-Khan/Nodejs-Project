@@ -5,11 +5,11 @@ const {
   getNotificationById,
   updateNotification,
   deleteNotification,
-} = require("../controller/notificationController");
+} = require("../../controller/mongo/notificationControllerMongo");
 const {
   authenticate,
   validateNotificationRequest,
-} = require("../middleware/authMiddleware");
+} = require("../../middleware/authMiddleware");
 
 const router = express.Router();
 
