@@ -18,33 +18,33 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 
-// Test MySQL Connection
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("✅ MySQL connected.");
-  })
-  .catch((err) => {
-    console.error("❌ MySQL connection failed:", err);
-  });
-
-// ✅ Sync all Sequelize models
-sequelize
-  .sync({ alter: true }) // or { force: true } to recreate tables every time
-  .then(() => {
-    console.log("✅ All models synced to MySQL.");
-  })
-  .catch((err) => {
-    console.error("❌ Model sync failed:", err);
-  });
-
-// mongoose
-//   .connect(process.env.MONGO_URI, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
+// // Test MySQL Connection
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log("✅ MySQL connected.");
 //   })
-//   .then(() => console.log("Connected to MongoDB"))
-//   .catch((err) => console.error("Failed to connect to MongoDB:", err));
+//   .catch((err) => {
+//     console.error("❌ MySQL connection failed:", err);
+//   });
+
+// // ✅ Sync all Sequelize models
+// sequelize
+//   .sync({ alter: true }) // or { force: true } to recreate tables every time
+//   .then(() => {
+//     console.log("✅ All models synced to MySQL.");
+//   })
+//   .catch((err) => {
+//     console.error("❌ Model sync failed:", err);
+//   });
+
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Failed to connect to MongoDB:", err));
 
 // Routes
 app.use("/api/v1/notifications", notificationRoutes);
