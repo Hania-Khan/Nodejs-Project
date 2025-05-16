@@ -6,8 +6,11 @@ const cors = require("cors");
 const { Kafka } = require("kafkajs");
 require("dotenv").config();
 
-const notificationRoutes = require("./route/mysql-route/notificationRoutesMysql");
-const userRoutes = require("./route/mysql-route/userRoutesMysql");
+// const notificationRoutes = require("./route/mysql-route/notificationRoutesMysql");
+// const userRoutes = require("./route/mysql-route/userRoutesMysql");
+
+const notificationRoutes = require("./route/mongo-route/notificationRoutesMongo");
+const userRoutes = require("./route/mongo-route/userRoutesMongo");
 
 const { runProducer } = require("./Kafka/producer");
 const { runConsumer } = require("./Kafka/consumer");
