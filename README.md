@@ -227,3 +227,10 @@ This model stores details of users who can send notifications, along with their 
 - **`View Results Tree`**:  
   Displays the status, response time, and data returned for each request made during the test run, useful for debugging.  
   ![Results Tree](./Results%20Tree.png)
+
+## 📈 Auto-Scaling Observation
+
+- **Pods scaled from 3 to 5**:  
+  During the load test, the number of pods increased from 3 to 5, reaching the maximum pod count.  
+  This confirms that the Minikube container successfully handled the incoming load and that Horizontal Pod Autoscaling (HPA) is functioning as expected.
+  ![Load balancing](./loadbalancing.jpeg)
