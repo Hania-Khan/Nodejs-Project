@@ -172,13 +172,13 @@ This model stores details of users who can send notifications, along with their 
 
 ### Notification Routes
 
-| Method | Endpoint                     | Description                            | Request Body                                                                                  | Example Response (200)                                          |
-| ------ | ---------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| POST   | `/api/v1/notifications/send` | Create and send a new notification     | `{"type": "email", "recipients": [  { "email": "user3@example.com" }, { "email": "user4@example.com" } ], "subject": Second Test Email", "content": "This is a test email notification.",   "status": "Sent" }`     | `{ "message": "Email notification sent successfully", "result": {"type": "email","sender": hania@example.com", "recipients": [{"email": "user3@example.com"},{"email": "user4@example.com"}]"subject": "Second Test Email", "content": "This is a test email notification.","status": "Sent" }}`               |
-| GET    | `/api/v1/notifications`      | Retrieve all notifications             | N/A                                                                                           | `[ { "_id": "abc123", "type": "email", "message": "Hello!" } ]` |
-| GET    | `/api/v1/notifications/:id`  | Retrieve a specific notification by ID | N/A                                                                                           | `{ "_id": "abc123", "type": "email", "message": "Hello!" }`     |
-| PUT    | `/api/v1/notifications/:id`  | Update notification details by ID      | `{ "type": "push", "message": "Updated Message", "recipients": [{"deviceToken": "xyz123"}] }` | `{ "message": "Notification updated successfully" }`            |
-| DELETE | `/api/v1/notifications/:id`  | Delete a specific notification by ID   | N/A                                                                                           | `{ "message": "Notification deleted successfully" }`            |
+| Method | Endpoint                     | Description                            | Request Body                                                                                                                                                                                                    | Example Response (200)                                                                                                                                                                                                                                                                           |
+| ------ | ---------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| POST   | `/api/v1/notifications/send` | Create and send a new notification     | `{"type": "email", "recipients": [  { "email": "user3@example.com" }, { "email": "user4@example.com" } ], "subject": Second Test Email", "content": "This is a test email notification.",   "status": "Sent" }` | `{ "message": "Email notification sent successfully", "result": {"type": "email","sender": hania@example.com", "recipients": [{"email": "user3@example.com"},{"email": "user4@example.com"}]"subject": "Second Test Email", "content": "This is a test email notification.","status": "Sent" }}` |
+| GET    | `/api/v1/notifications`      | Retrieve all notifications             | N/A                                                                                                                                                                                                             | `[ { "_id": "abc123", "type": "email", "message": "Hello!" } ]`                                                                                                                                                                                                                                  |
+| GET    | `/api/v1/notifications/:id`  | Retrieve a specific notification by ID | N/A                                                                                                                                                                                                             | `{ "_id": "abc123", "type": "email", "message": "Hello!" }`                                                                                                                                                                                                                                      |
+| PUT    | `/api/v1/notifications/:id`  | Update notification details by ID      | `{ "type": "push", "message": "Updated Message", "recipients": [{"deviceToken": "xyz123"}] }`                                                                                                                   | `{ "message": "Notification updated successfully" }`                                                                                                                                                                                                                                             |
+| DELETE | `/api/v1/notifications/:id`  | Delete a specific notification by ID   | N/A                                                                                                                                                                                                             | `{ "message": "Notification deleted successfully" }`                                                                                                                                                                                                                                             |
 
 ---
 
@@ -201,3 +201,29 @@ This model stores details of users who can send notifications, along with their 
 - **`roleMiddleware`**: Restricts access based on user roles. Only allows users with specified roles to access protected routes.
 
 - **`validateNotificationRequest`**: Validates incoming notification requests using Joi. Ensures required fields are present based on the notification type (email, sms, push).
+
+## 🐳 Kubernetes
+
+- **`minikube start`**: Initializes and starts the local Kubernetes cluster using Minikube.
+- **`minikube dashboard`**: Opens the Minikube Dashboard UI in the browser for visual management.
+- **`kubectl port-forward svc/node-app-service 4001:4001`**: Forwards local port `4001` to the `node-app-service` inside the cluster to enable sending API requests from your machine.
+
+---
+
+## 🧪 JMeter Load Testing
+
+- **`Thread Group`**:  
+  Configures test load settings like number of threads (virtual users), ramp-up period, and loop count for executing requests.  
+  ![Thread Group](./Thread%20Group.png)
+
+- **`HTTP Request`**:  
+  Defines the API endpoint, HTTP method (`GET`, `POST`, etc.), parameters, and body payload to send during load testing.  
+  ![HTTP Request](./Http%20Request.png)
+
+- **`HTTP Header Manager`**:  
+  Adds headers to the requests, such as `Content-Type: application/json` or `Authorization` tokens to simulate real client behavior.  
+  ![HTTP Header Manager](./Http%20Header%20Manager.png)
+
+- **`View Results Tree`**:  
+  Displays the status, response time, and data returned for each request made during the test run, useful for debugging.  
+  ![Results Tree](./Results%20Tree.png)

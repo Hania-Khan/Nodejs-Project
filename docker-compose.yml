@@ -3,7 +3,7 @@ version: "3.8"
 services:
   app:
     build: .
-    image: node-app-image-2
+    image: node-app-image-3
     ports:
       - "4002:4001"
     volumes:

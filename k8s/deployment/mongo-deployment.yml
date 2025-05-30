@@ -12,6 +12,13 @@ spec:
       labels:
         app: mongo
     spec:
+      initContainers:
+        - name: wait-for-mongo
+          image: busybox
+          command:
+            - sh
+            - -c
+            - until nc -z mongo-service 27017; do echo waiting for mongo; sleep 2; done
       containers:
         - name: mongo
           image: mongo
@@ -22,9 +29,17 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: app-secret
-                  key: MYSQL_USER
+                  key: MONGO_INITDB_ROOT_USERNAME
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: app-secret
-                  key: MYSQL_PASSWORD
+                  key: MONGO_INITDB_ROOT_PASSWORD
+          readinessProbe:
+            exec:
+              command:
+                - mongo
+                - --eval
+                - db.adminCommand('ping')
+            initialDelaySeconds: 10
+            periodSeconds: 10
