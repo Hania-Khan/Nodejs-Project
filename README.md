@@ -165,8 +165,8 @@ This model stores details of users who can send notifications, along with their 
 
 ### Entity Relationship Diagram
 
-![ERD](./ERD-Updated%20ERD.drawio.png)
-![ERD](./ERD-Page-2.drawio.png)
+![ERD](./images/ERD-Updated%20ERD.drawio.png)
+![ERD](./images/ERD-Page-2.drawio.png)
 
 ## 🚀 API Routes
 
@@ -214,23 +214,23 @@ This model stores details of users who can send notifications, along with their 
 
 - **`Thread Group`**:  
   Configures test load settings like number of threads (virtual users), ramp-up period, and loop count for executing requests.  
-  ![Thread Group](./Thread%20Group.png)
+  ![Thread Group](./images/Thread%20Group.png)
 
 - **`HTTP Request`**:  
   Defines the API endpoint, HTTP method (`GET`, `POST`, etc.), parameters, and body payload to send during load testing.  
-  ![HTTP Request](./Http%20Request.png)
+  ![HTTP Request](./images/Http%20Request.png)
 
 - **`HTTP Header Manager`**:  
   Adds headers to the requests, such as `Content-Type: application/json` or `Authorization` tokens to simulate real client behavior.  
-  ![HTTP Header Manager](./Http%20Header%20Manager.png)
+  ![HTTP Header Manager](./images/Http%20Header%20Manager.png)
 
 - **`View Results Tree`**:  
   Displays the status, response time, and data returned for each request made during the test run, useful for debugging.  
-  ![Results Tree](./Results%20Tree.png)
+  ![Results Tree](./images/Results%20Tree.png)
 
 ## 📈 Auto-Scaling Observation
 
 - **Pods scaled from 3 to 5**:  
   During the load test, the number of pods increased from 3 to 5, reaching the maximum pod count.  
   This confirms that the Minikube container successfully handled the incoming load and that Horizontal Pod Autoscaling (HPA) is functioning as expected.
-  ![Load balancing](./loadbalancing.jpeg)
+  ![Load balancing](./images/loadbalancing.jpeg)
